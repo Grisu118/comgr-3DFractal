@@ -17,7 +17,8 @@ public class MergeGeometry extends DefaultGeometry {
 
     private Primitive type;
     private IGeometryAttribute[] attributes;
-    private ArrayList<Float>[] dataList;
+    private float[][] data;
+    private ArrayList<float[][]> dataList;
 
     /**
      * Generates geometry from the given data with the given attribute-layout.
@@ -32,32 +33,36 @@ public class MergeGeometry extends DefaultGeometry {
         super(type, attributes, data);
         this.type = type;
         this.attributes = attributes;
-        this.dataList = new ArrayList[data.length];
-        for (int i = 0; i < dataList.length; i++) {
-            dataList[i] = new ArrayList<>(data[i].length);
-            for (float f : data[i]) {
-                dataList[i].add(f);
-            }
-        }
+        this.dataList = new ArrayList<>();
+        this.dataList.add(data);
+        this.data = data;
     }
 
     public void merge(MergeGeometry g) {
         if (!checkAttributeConsistency(g) || !type.equals(g.type)) {
             throw new IllegalArgumentException("Not same attributes");
         }
-        for (int i = 0; i<dataList.length; i++) {
-            dataList[i].addAll(g.dataList[i]);
-        }
+        dataList.add(g.data);
     }
 
     public MergeGeometry mergedGeometry() {
-        float[][] rData = new float[dataList.length][];
-        for (int i = 0; i < rData.length; i++) {
-            float[] r = new float[dataList[i].size()];
-            for (int j = 0; j<r.length;j++) {
-                r[j] = dataList[i].get(j);
+        float[][] rData = new float[attributes.length][];
+        int[] lengths = new int[attributes.length];
+        for (float[][] floats : dataList) {
+            for (int i = 0; i < floats.length; i++) {
+                lengths[i] += floats[i].length;
             }
-            rData[i] = r;
+        }
+        for (int i = 0; i<lengths.length; i++) {
+            rData[i] = new float[lengths[i]];
+        }
+        lengths = new int[attributes.length];
+        for (float[][] floats : dataList) {
+            for (int i = 0; i < floats.length; i++) {
+                for (int j = 0; j < floats[i].length; j++, lengths[i]++) {
+                    rData[i][lengths[i]] = floats[i][j];
+                }
+            }
         }
         return new MergeGeometry(type, attributes, rData);
     }

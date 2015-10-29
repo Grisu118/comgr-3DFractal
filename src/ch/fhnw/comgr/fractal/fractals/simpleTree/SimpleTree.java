@@ -39,7 +39,7 @@ public class SimpleTree implements IFractal {
         this.width = width;
         this.height = height;
         this.alpha = alpha;
-        this.depth = 9;
+        this.depth = 10;
         this.scene = scene;
         //this.geometry = createGeometry();
 
