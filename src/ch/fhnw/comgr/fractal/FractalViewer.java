@@ -25,6 +25,7 @@ import java.util.List;
 public final class FractalViewer {
 
     private List<IFractal> fractals = new ArrayList<>();
+    private IFractal activeFractal;
 
     public FractalViewer() {
         IController controller = new DefaultController();
@@ -38,13 +39,14 @@ public final class FractalViewer {
 
             // Create and add camera
             ICamera camera = new Camera(new Vec3(0, -5, 5), Vec3.ZERO);
-            //scene.add3DObject(camera);
+            scene.add3DObject(camera);
             controller.setCamera(view, camera);
 
-            IFractal fractal = new SimpleTree(1,0.05f,0.05f,30, scene);
+            activeFractal = new SimpleTree(1,0.05f,0.05f,30, scene);
 
             // Add an exit button
             controller.getUI().addWidget(new Button(0, 0, "Quit", "Quit", KeyEvent.VK_ESCAPE, (button, v) -> System.exit(0)));
+            controller.getUI().addWidgets(activeFractal.getWidgets());
         });
 
 

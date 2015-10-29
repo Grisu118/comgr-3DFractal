@@ -6,9 +6,11 @@ import ch.fhnw.comgr.fractal.util.TransformableGeometry;
 import ch.fhnw.ether.scene.IScene;
 import ch.fhnw.ether.scene.mesh.DefaultMesh;
 import ch.fhnw.ether.scene.mesh.IMesh;
-import ch.fhnw.ether.scene.mesh.geometry.DefaultGeometry;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
 import ch.fhnw.ether.scene.mesh.material.ColorMaterial;
+import ch.fhnw.ether.ui.IWidget;
+import ch.fhnw.ether.ui.Slider;
+import ch.fhnw.ether.view.IView;
 import ch.fhnw.util.color.RGBA;
 import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
@@ -27,58 +29,77 @@ public class SimpleTree implements IFractal {
     private float height;
     private float alpha;
     private int depth;
-    private List<IMesh> meshs = new ArrayList<>();
+    private int minDepth = 1;
+    private int maxDepth = 11;
 
     private TransformableGeometry geometry;
     private MergeGeometry tree;
 
     private IScene scene;
+    private List<IWidget> widgets = new ArrayList<>();
+    private IMesh msh;
 
     public SimpleTree(float length, float width, float height, float alpha, IScene scene) {
         this.length = length;
         this.width = width;
         this.height = height;
         this.alpha = alpha;
-        this.depth = 10;
+        this.depth = 1;
         this.scene = scene;
         //this.geometry = createGeometry();
 
-        float l = length;
         float w = width * 0.5f;
         float h = height * 0.5f;
         Vec4[] vec4s = {
                 // bottom
-                new Vec4(-w, -h, -l, 1), new Vec4(-w, h, -l, 1), new Vec4(w, h, -l, 1),
-                new Vec4(-w, -h, -l, 1), new Vec4(w, h, -l, 1), new Vec4(w, -h, -l, 1),
+                new Vec4(-w, -h, -length, 1), new Vec4(-w, h, -length, 1), new Vec4(w, h, -length, 1),
+                new Vec4(-w, -h, -length, 1), new Vec4(w, h, -length, 1), new Vec4(w, -h, -length, 1),
 
                 // top
                 new Vec4(w, -h, 0, 1), new Vec4(w, h, 0, 1), new Vec4(-w, h, 0, 1),
                 new Vec4(w, -h, 0, 1), new Vec4(-w, h, 0, 1), new Vec4(-w, -h, 0, 1),
 
                 // front
-                new Vec4(-w, -h, -l, 1), new Vec4(w, -h, -l, 1), new Vec4(w, -h, 0, 1),
-                new Vec4(-w, -h, -l, 1), new Vec4(w, -h, 0, 1), new Vec4(-w, -h, 0, 1),
+                new Vec4(-w, -h, -length, 1), new Vec4(w, -h, -length, 1), new Vec4(w, -h, 0, 1),
+                new Vec4(-w, -h, -length, 1), new Vec4(w, -h, 0, 1), new Vec4(-w, -h, 0, 1),
 
                 // back
-                new Vec4(w, h, -l, 1), new Vec4(-w, h, -l, 1), new Vec4(-w, h, 0, 1),
-                new Vec4(w, h, -l, 1), new Vec4(-w, h, 0, 1), new Vec4(w, h, 0, 1),
+                new Vec4(w, h, -length, 1), new Vec4(-w, h, -length, 1), new Vec4(-w, h, 0, 1),
+                new Vec4(w, h, -length, 1), new Vec4(-w, h, 0, 1), new Vec4(w, h, 0, 1),
 
                 // left
-                new Vec4(-w, h, -l, 1), new Vec4(-w, -h, -l, 1), new Vec4(-w, -h, 0, 1),
-                new Vec4(-w, h, -l, 1), new Vec4(-w, -h, 0, 1), new Vec4(-w, h, 0, 1),
+                new Vec4(-w, h, -length, 1), new Vec4(-w, -h, -length, 1), new Vec4(-w, -h, 0, 1),
+                new Vec4(-w, h, -length, 1), new Vec4(-w, -h, 0, 1), new Vec4(-w, h, 0, 1),
 
                 // right
-                new Vec4(w, -h, -l, 1), new Vec4(w, h, -l, 1), new Vec4(w, h, 0, 1),
-                new Vec4(w, -h, -l, 1), new Vec4(w, h, 0, 1), new Vec4(w, -h, 0, 1)
+                new Vec4(w, -h, -length, 1), new Vec4(w, h, -length, 1), new Vec4(w, h, 0, 1),
+                new Vec4(w, -h, -length, 1), new Vec4(w, h, 0, 1), new Vec4(w, -h, 0, 1)
         };
         this.geometry = new TransformableGeometry(vec4s);
 
+        createObjects();
+
+        widgets.add(new Slider(1,1,"Tiefe", "Die Maximale Tiefe", 0, (slider, view) -> updateDepth(slider.getValue(), view)));
+    }
+
+    private void createObjects() {
         recursiveFract(1, 0, Vec3.Y, Mat4.ID);
         System.out.println("Fractal Calculated");
-        IMesh msh = new DefaultMesh(new ColorMaterial(RGBA.WHITE, true), tree.mergedGeometry(), IMesh.Queue.TRANSPARENCY);
+        msh = new DefaultMesh(new ColorMaterial(RGBA.WHITE, true), tree.mergedGeometry(), IMesh.Queue.TRANSPARENCY);
         System.out.println("Mesh Generated");
         scene.add3DObject(msh);
         System.out.println("Mesh Added");
+    }
+
+    private void updateDepth(float value, IView view) {
+        int n = maxDepth - minDepth;
+        int d = Math.round(value*n)+1;
+        if (depth != d) {
+            depth = d;
+            scene.remove3DObject(msh);
+            createObjects();
+
+        }
     }
 
     private void recursiveFract(int level, float alpha, Vec3 rot, Mat4 transform) {
@@ -112,4 +133,8 @@ public class SimpleTree implements IFractal {
         return MergeGeometry.createVC(IGeometry.Primitive.TRIANGLES, vertices, colors);
     }
 
+    @Override
+    public List<IWidget> getWidgets() {
+        return widgets;
+    }
 }
