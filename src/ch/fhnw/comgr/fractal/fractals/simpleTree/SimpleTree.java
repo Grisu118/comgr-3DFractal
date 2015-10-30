@@ -30,10 +30,11 @@ public class SimpleTree implements IFractal {
     private float alpha;
     private int depth;
     private int minDepth = 1;
-    private int maxDepth = 11;
+    private int maxDepth = 10;
 
     private TransformableGeometry geometry;
     private MergeGeometry tree;
+    private MergeGeometry[] trees = new MergeGeometry[maxDepth];
 
     private IScene scene;
     private List<IWidget> widgets = new ArrayList<>();
@@ -46,7 +47,6 @@ public class SimpleTree implements IFractal {
         this.alpha = alpha;
         this.depth = 1;
         this.scene = scene;
-        //this.geometry = createGeometry();
 
         float w = width * 0.5f;
         float h = height * 0.5f;
@@ -77,15 +77,19 @@ public class SimpleTree implements IFractal {
         };
         this.geometry = new TransformableGeometry(vec4s);
 
-        createObjects();
-
         widgets.add(new Slider(1,1,"Tiefe", "Die Maximale Tiefe", 0, (slider, view) -> updateDepth(slider.getValue(), view)));
+
+        init();
     }
 
     private void createObjects() {
-        recursiveFract(1, 0, Vec3.Y, Mat4.ID);
-        System.out.println("Fractal Calculated");
-        msh = new DefaultMesh(new ColorMaterial(RGBA.WHITE, true), tree.mergedGeometry(), IMesh.Queue.TRANSPARENCY);
+        if (trees[depth-1] == null) {
+            recursiveFract(1, 0, Vec3.Y, Mat4.ID);
+            System.out.println("Fractal Calculated");
+            trees[depth-1] = tree.mergedGeometry();
+        }
+        msh = new DefaultMesh(new ColorMaterial(RGBA.WHITE, true), trees[depth-1], IMesh.Queue.TRANSPARENCY);
+        msh.setName(String.format("Tiefe: %d", depth));
         System.out.println("Mesh Generated");
         scene.add3DObject(msh);
         System.out.println("Mesh Added");
@@ -119,10 +123,6 @@ public class SimpleTree implements IFractal {
     }
 
     private MergeGeometry createGeometry(float[] vertices) {
-        float l = length;
-        float w = width * 0.5f;
-        float h = height * 0.5f;
-
         float[] colors = new float[36 * 4];
         for (int i = 0; i < colors.length; i += 4) {
             colors[i + 0] = 0.2f; //R
@@ -134,7 +134,21 @@ public class SimpleTree implements IFractal {
     }
 
     @Override
+    public void init() {
+        trees = new MergeGeometry[maxDepth];
+        createObjects();
+    }
+
+    @Override
     public List<IWidget> getWidgets() {
         return widgets;
+    }
+
+    @Override
+    public void cleanup() {
+        scene.remove3DObject(msh);
+        tree = null;
+        msh = null;
+        trees = null;
     }
 }

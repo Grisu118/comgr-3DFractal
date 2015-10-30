@@ -9,6 +9,10 @@ import java.util.List;
  */
 public interface IFractal {
 
+    void init();
+
     List<IWidget> getWidgets();
+
+    void cleanup();
 
 }
