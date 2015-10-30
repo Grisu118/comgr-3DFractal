@@ -97,8 +97,8 @@ public class SimpleTree implements IFractal {
         if (depth != d) {
             depth = d;
             scene.remove3DObject(msh);
+            tree = null;
             createObjects();
-
         }
     }
 
