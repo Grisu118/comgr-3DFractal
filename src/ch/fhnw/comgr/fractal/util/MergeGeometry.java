@@ -1,12 +1,9 @@
 package ch.fhnw.comgr.fractal.util;
 
 import ch.fhnw.ether.scene.mesh.geometry.AbstractGeometry;
-import ch.fhnw.ether.scene.mesh.geometry.DefaultGeometry;
-import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -22,6 +19,9 @@ public class MergeGeometry extends AbstractGeometry {
     private final float[][] data;
     private ArrayList<float[][]> dataList;
 
+    private int verticesCount = 0;
+    private int trianglesCount = 0;
+
     /**
      * Generates geometry from the given data with the given attribute-layout.
      * All data is copied. Changes on the passed arrays will not affect this
@@ -34,7 +34,6 @@ public class MergeGeometry extends AbstractGeometry {
     public MergeGeometry(Primitive type, IGeometryAttribute[] attributes, float[][] data) {
         super(type);
 
-
         if (attributes[0] != POSITION_ARRAY)
             throw new IllegalArgumentException("first attribute must be position");
         if (attributes.length != data.length)
@@ -46,6 +45,8 @@ public class MergeGeometry extends AbstractGeometry {
         for (int i = 0; i < data.length; ++i) {
             this.data[i] = Arrays.copyOf(data[i], data[i].length);
         }
+        verticesCount += data[0].length;
+        trianglesCount += data[0].length/9;
         this.dataList = new ArrayList<>();
         this.dataList.add(data);
     }
@@ -60,6 +61,8 @@ public class MergeGeometry extends AbstractGeometry {
             this.data[i] = Arrays.copyOf(g.data[i], g.data[i].length);
         }
         this.dataList = (ArrayList<float[][]>) g.dataList.clone();
+        this.verticesCount = g.verticesCount;
+        this.trianglesCount = g.trianglesCount;
     }
 
     /**
@@ -150,6 +153,8 @@ public class MergeGeometry extends AbstractGeometry {
             throw new IllegalArgumentException("Not same attributes");
         }
         dataList.add(g.data);
+        this.verticesCount += g.data[0].length;
+        this.trianglesCount += g.data[0].length/9;
     }
 
     public MergeGeometry mergedGeometry() {
@@ -172,6 +177,14 @@ public class MergeGeometry extends AbstractGeometry {
             }
         }
         return new MergeGeometry(type, attributes, rData);
+    }
+
+    public int getVerticesCount() {
+        return verticesCount;
+    }
+
+    public int getTrianglesCount() {
+        return trianglesCount;
     }
 
     private boolean checkAttributeConsistency(MergeGeometry g) {

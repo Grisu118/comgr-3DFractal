@@ -104,6 +104,7 @@ public class SimpleTree implements IFractal {
             tree = null;
             createObjects();
         }
+        System.out.println(String.format("Vertices: %,d \nTriangles: %,d", getVerticesCount(), getTrianglesCount()));
     }
 
     private void recursiveFract(int level, float alpha, Vec3 rot, Mat4 transform) {
@@ -150,5 +151,15 @@ public class SimpleTree implements IFractal {
         tree = null;
         msh = null;
         trees = null;
+    }
+
+    @Override
+    public int getVerticesCount() {
+        return trees[depth-1].getVerticesCount();
+    }
+
+    @Override
+    public int getTrianglesCount() {
+        return trees[depth-1].getTrianglesCount();
     }
 }

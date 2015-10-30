@@ -25,4 +25,8 @@ public interface IFractal {
      */
     void cleanup();
 
+    int getVerticesCount();
+
+    int getTrianglesCount();
+
 }
