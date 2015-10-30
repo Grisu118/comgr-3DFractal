@@ -31,7 +31,7 @@ public final class FractalViewer {
         IController controller = new DefaultController();
         controller.run((time) -> {
             // Create view
-            IView view = new DefaultView(controller, 100, 100, 500, 500, IView.INTERACTIVE_VIEW, "Simple Cube");
+            IView view = new DefaultView(controller, 100, 100, 500, 500, IView.INTERACTIVE_VIEW, "3D Fractal Viewer");
             // Create scene
             IScene scene = new DefaultScene(controller);
             controller.setScene(scene);
