@@ -8,20 +8,25 @@ import ch.fhnw.util.math.Vec4;
  */
 public class TransformableGeometry {
     private final Vec4[] vertices;
+    private final Vec4[] normals;
 
-    public TransformableGeometry(Vec4[] vertices) {
+    public TransformableGeometry(Vec4[] vertices, Vec4[] normals) {
         this.vertices = vertices;
+        this.normals = normals;
     }
 
     public TransformableGeometry transform(Mat4 m) {
         Vec4[] r = new Vec4[vertices.length];
+        Vec4[] n = new Vec4[normals.length];
+        Mat4 m2 = m.inverse().transpose();
         for (int i = 0; i < vertices.length; i++) {
             r[i] = m.transform(vertices[i]);
+            n[i] = m2.transform(vertices[i]);
         }
-        return new TransformableGeometry(r);
+        return new TransformableGeometry(r, n);
     }
 
-    public float[] toArray() {
+    public float[] getVertices() {
         float[] r = new float[vertices.length * 3];
         for (int i = 0, j = 0; i < vertices.length; i++,j+=3) {
             r[j+0] = vertices[i].x;
@@ -29,5 +34,15 @@ public class TransformableGeometry {
             r[j+2] = vertices[i].z;
         }
         return r;
+    }
+
+    public float[] getNormals() {
+        float[] n = new float[normals.length * 3];
+        for (int i = 0, j = 0; i < normals.length; i++,j+=3) {
+            n[j+0] = normals[i].x;
+            n[j+1] = normals[i].y;
+            n[j+2] = normals[i].z;
+        }
+        return n;
     }
 }

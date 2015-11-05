@@ -13,8 +13,6 @@ import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
 import ch.fhnw.ether.scene.mesh.material.ColorMaterial;
 import ch.fhnw.ether.ui.IWidget;
-import ch.fhnw.ether.ui.Slider;
-import ch.fhnw.ether.view.IView;
 import ch.fhnw.util.color.RGBA;
 import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
@@ -83,7 +81,28 @@ public class SimpleTree implements IFractal {
                 new Vec4(w, -h, -length, 1), new Vec4(w, h, -length, 1), new Vec4(w, h, 0, 1),
                 new Vec4(w, -h, -length, 1), new Vec4(w, h, 0, 1), new Vec4(w, -h, 0, 1)
         };
-        this.geometry = new TransformableGeometry(vec4s);
+
+        Vec4[] normals = {
+                // bottom
+                new Vec4(0,0,-1,0), new Vec4(0,0,-1,0), new Vec4(0,0,-1,0),
+                new Vec4(0,0,-1,0), new Vec4(0,0,-1,0), new Vec4(0,0,-1,0),
+                //top
+                new Vec4(0,0,1,0), new Vec4(0,0,1), new Vec4(0,0,1,0),
+                new Vec4(0,0,1,0), new Vec4(0,0,1), new Vec4(0,0,1,0),
+                //front
+                new Vec4(0,-1,0,0), new Vec4(0,-1,0,0), new Vec4(0,-1,0,0),
+                new Vec4(0,-1,0,0), new Vec4(0,-1,0,0), new Vec4(0,-1,0,0),
+                //back
+                new Vec4(0,1,0,0), new Vec4(0,1,0,0), new Vec4(0,1,0,0),
+                new Vec4(0,1,0,0), new Vec4(0,1,0,0), new Vec4(0,1,0,0),
+                //left
+                new Vec4(-1,0,0,0), new Vec4(-1,0,0,0), new Vec4(-1,0,0,0),
+                new Vec4(-1,0,0,0), new Vec4(-1,0,0,0), new Vec4(-1,0,0,0),
+                //right
+                new Vec4(1,0,0,0), new Vec4(1,0,0,0), new Vec4(1,0,0,0),
+                new Vec4(1,0,0,0), new Vec4(1,0,0,0), new Vec4(1,0,0,0)
+        };
+        this.geometry = new TransformableGeometry(vec4s, normals);
 
         createWidgets();
 
@@ -130,9 +149,9 @@ public class SimpleTree implements IFractal {
         transform = Mat4.multiply(transform, Mat4.rotate(alpha, rot), Mat4.translate(0, 0, length / level));
 
         if (tree != null) {
-            tree.merge(createGeometry(geometry.transform(Mat4.multiply(transform, Mat4.scale(1.0f / level))).toArray()));
+            tree.merge(createGeometry(geometry.transform(Mat4.multiply(transform, Mat4.scale(1.0f / level))).getVertices()));
         } else {
-            tree = createGeometry(geometry.transform(Mat4.multiply(transform, Mat4.scale(1.0f / level))).toArray());
+            tree = createGeometry(geometry.transform(Mat4.multiply(transform, Mat4.scale(1.0f / level))).getVertices());
         }
         recursiveFract(++level, this.alpha, Vec3.Y, transform);
         recursiveFract(level, -this.alpha, Vec3.Y, transform);
