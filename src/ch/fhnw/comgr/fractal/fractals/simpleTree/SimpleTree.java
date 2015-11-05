@@ -3,6 +3,7 @@ package ch.fhnw.comgr.fractal.fractals.simpleTree;
 import ch.fhnw.comgr.fractal.IUpdateListener;
 import ch.fhnw.comgr.fractal.fractals.IFractal;
 import ch.fhnw.comgr.fractal.ui.SmallSlider;
+import ch.fhnw.comgr.fractal.ui.TextWidget;
 import ch.fhnw.comgr.fractal.util.MergeGeometry;
 import ch.fhnw.comgr.fractal.util.TransformableGeometry;
 import ch.fhnw.ether.scene.IScene;
@@ -42,6 +43,8 @@ public class SimpleTree implements IFractal {
     private IMesh msh;
 
     private Set<IUpdateListener> listeners = new HashSet<>();
+    private TextWidget verticesCount;
+    private TextWidget trianglesCount;
 
     public SimpleTree(float length, float width, float height, float alpha, IScene scene) {
         this.length = length;
@@ -80,9 +83,19 @@ public class SimpleTree implements IFractal {
         };
         this.geometry = new TransformableGeometry(vec4s);
 
-        widgets.add(new SmallSlider(1,1,"Tiefe", null, 0, (slider, view) -> updateDepth(slider.getValue(minDepth, maxDepth))));
+        createWidgets();
 
         init();
+        trianglesCount.setContent(String.format("%,d", getTrianglesCount()));
+        verticesCount.setContent(String.format("%,d", getVerticesCount()));
+    }
+
+    private void createWidgets() {
+        widgets.add(new SmallSlider(0,4,"Tiefe", null, 0, (slider, view) -> updateDepth(slider.getValue(minDepth, maxDepth))));
+        verticesCount = new TextWidget(0,2, 60, "Vertices:");
+        trianglesCount = new TextWidget(0,3, 60, "Triangles:");
+        widgets.add(verticesCount);
+        widgets.add(trianglesCount);
     }
 
     private void createObjects() {
@@ -180,6 +193,8 @@ public class SimpleTree implements IFractal {
     }
 
     private void notifyUpdate() {
+        verticesCount.setContent(String.format("%,d", getVerticesCount()));
+        trianglesCount.setContent(String.format("%,d", getTrianglesCount()));
         listeners.forEach(l ->  l.notifyUpdate(this));
     }
 }

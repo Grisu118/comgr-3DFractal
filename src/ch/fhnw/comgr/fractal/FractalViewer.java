@@ -58,7 +58,6 @@ public final class FractalViewer implements IUpdateListener{
     @Override
     public void notifyUpdate(IFractal frac) {
         if (Objects.equals(activeFractal, frac)) {
-            controller.getUI().setMessage(String.format("Vertices: %,d \nTriangles: %,d", activeFractal.getVerticesCount(), activeFractal.getTrianglesCount()));
         }
     }
 }
