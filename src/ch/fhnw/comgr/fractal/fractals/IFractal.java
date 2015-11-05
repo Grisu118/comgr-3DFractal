@@ -1,6 +1,7 @@
 package ch.fhnw.comgr.fractal.fractals;
 
 import ch.fhnw.comgr.fractal.IUpdateListener;
+import ch.fhnw.ether.scene.light.ILight;
 import ch.fhnw.ether.ui.IWidget;
 
 import java.util.List;
@@ -32,5 +33,8 @@ public interface IFractal {
 
     void registerUpdateListener(IUpdateListener listener);
     void removeUpdateListener(IUpdateListener listener);
+
+    boolean getLightState();
+    ILight getLight();
 
 }

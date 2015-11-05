@@ -27,7 +27,7 @@ public class BooleanWidget extends AbstractWidget {
     private static final Color BOOLEAN_BG = new Color(1f, 1f, 1f, 0.25f);
     private static final Color BOOLEAN_FG = new Color(0.6f, 0, 0, 0.75f);
 
-    private boolean value;
+    private boolean value = true;
     private String onLabel;
     private String offLabel;
 

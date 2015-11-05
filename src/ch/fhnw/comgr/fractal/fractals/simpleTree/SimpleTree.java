@@ -7,12 +7,18 @@ import ch.fhnw.comgr.fractal.ui.SmallSlider;
 import ch.fhnw.comgr.fractal.ui.TextWidget;
 import ch.fhnw.comgr.fractal.util.MergeGeometry;
 import ch.fhnw.comgr.fractal.util.TransformableGeometry;
+import ch.fhnw.comgr.fractal.util.UpdateType;
 import ch.fhnw.ether.scene.IScene;
+import ch.fhnw.ether.scene.light.DirectionalLight;
+import ch.fhnw.ether.scene.light.ILight;
+import ch.fhnw.ether.scene.light.PointLight;
 import ch.fhnw.ether.scene.mesh.DefaultMesh;
 import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
 import ch.fhnw.ether.scene.mesh.material.ColorMaterial;
+import ch.fhnw.ether.scene.mesh.material.ShadedMaterial;
 import ch.fhnw.ether.ui.IWidget;
+import ch.fhnw.util.color.RGB;
 import ch.fhnw.util.color.RGBA;
 import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
@@ -38,13 +44,14 @@ public class SimpleTree implements IFractal {
     private MergeGeometry[] trees = new MergeGeometry[maxDepth];
 
     private IScene scene;
+    private ILight light = new PointLight(new Vec3(0, 0, 2), RGB.BLACK, RGB.WHITE, 10); //new DirectionalLight(Vec3.Z, RGB.BLACK, RGB.WHITE);
     private List<IWidget> widgets = new ArrayList<>();
     private IMesh msh;
 
     private Set<IUpdateListener> listeners = new HashSet<>();
     private TextWidget verticesCount;
     private TextWidget trianglesCount;
-    private boolean lightState;
+    private boolean lightState = true;
 
     public SimpleTree(float length, float width, float height, float alpha, IScene scene) {
         this.length = length;
@@ -84,23 +91,23 @@ public class SimpleTree implements IFractal {
 
         Vec4[] normals = {
                 // bottom
-                new Vec4(0,0,-1,0), new Vec4(0,0,-1,0), new Vec4(0,0,-1,0),
-                new Vec4(0,0,-1,0), new Vec4(0,0,-1,0), new Vec4(0,0,-1,0),
+                new Vec4(0, 0, -1, 0), new Vec4(0, 0, -1, 0), new Vec4(0, 0, -1, 0),
+                new Vec4(0, 0, -1, 0), new Vec4(0, 0, -1, 0), new Vec4(0, 0, -1, 0),
                 //top
-                new Vec4(0,0,1,0), new Vec4(0,0,1), new Vec4(0,0,1,0),
-                new Vec4(0,0,1,0), new Vec4(0,0,1), new Vec4(0,0,1,0),
+                new Vec4(0, 0, 1, 0), new Vec4(0, 0, 1), new Vec4(0, 0, 1, 0),
+                new Vec4(0, 0, 1, 0), new Vec4(0, 0, 1), new Vec4(0, 0, 1, 0),
                 //front
-                new Vec4(0,-1,0,0), new Vec4(0,-1,0,0), new Vec4(0,-1,0,0),
-                new Vec4(0,-1,0,0), new Vec4(0,-1,0,0), new Vec4(0,-1,0,0),
+                new Vec4(0, -1, 0, 0), new Vec4(0, -1, 0, 0), new Vec4(0, -1, 0, 0),
+                new Vec4(0, -1, 0, 0), new Vec4(0, -1, 0, 0), new Vec4(0, -1, 0, 0),
                 //back
-                new Vec4(0,1,0,0), new Vec4(0,1,0,0), new Vec4(0,1,0,0),
-                new Vec4(0,1,0,0), new Vec4(0,1,0,0), new Vec4(0,1,0,0),
+                new Vec4(0, 1, 0, 0), new Vec4(0, 1, 0, 0), new Vec4(0, 1, 0, 0),
+                new Vec4(0, 1, 0, 0), new Vec4(0, 1, 0, 0), new Vec4(0, 1, 0, 0),
                 //left
-                new Vec4(-1,0,0,0), new Vec4(-1,0,0,0), new Vec4(-1,0,0,0),
-                new Vec4(-1,0,0,0), new Vec4(-1,0,0,0), new Vec4(-1,0,0,0),
+                new Vec4(-1, 0, 0, 0), new Vec4(-1, 0, 0, 0), new Vec4(-1, 0, 0, 0),
+                new Vec4(-1, 0, 0, 0), new Vec4(-1, 0, 0, 0), new Vec4(-1, 0, 0, 0),
                 //right
-                new Vec4(1,0,0,0), new Vec4(1,0,0,0), new Vec4(1,0,0,0),
-                new Vec4(1,0,0,0), new Vec4(1,0,0,0), new Vec4(1,0,0,0)
+                new Vec4(1, 0, 0, 0), new Vec4(1, 0, 0, 0), new Vec4(1, 0, 0, 0),
+                new Vec4(1, 0, 0, 0), new Vec4(1, 0, 0, 0), new Vec4(1, 0, 0, 0)
         };
         this.geometry = new TransformableGeometry(vec4s, normals);
 
@@ -112,21 +119,21 @@ public class SimpleTree implements IFractal {
     }
 
     private void createWidgets() {
-        widgets.add(new SmallSlider(0,4,"Tiefe", null, 0, (s, v) -> updateDepth(s.getValue(minDepth, maxDepth))));
-        verticesCount = new TextWidget(0,2, 60, "Vertices:");
-        trianglesCount = new TextWidget(0,3, 60, "Triangles:");
+        widgets.add(new SmallSlider(0, 4, "Tiefe", null, 0, (s, v) -> updateDepth(s.getValue(minDepth, maxDepth))));
+        verticesCount = new TextWidget(0, 2, 60, "Vertices:");
+        trianglesCount = new TextWidget(0, 3, 60, "Triangles:");
         widgets.add(verticesCount);
         widgets.add(trianglesCount);
         widgets.add(new BooleanWidget(0, 5, "Light", "On", "Off", "Turn on/off Light", (w, v) -> setLightState(w.getValue())));
     }
 
     private void createObjects() {
-        if (trees[depth-1] == null) {
+        if (trees[depth - 1] == null) {
             recursiveFract(1, 0, Vec3.Y, Mat4.ID);
             System.out.println("Fractal Calculated");
-            trees[depth-1] = tree.mergedGeometry();
+            trees[depth - 1] = tree.mergedGeometry();
         }
-        msh = new DefaultMesh(new ColorMaterial(RGBA.WHITE, true), trees[depth-1], IMesh.Queue.TRANSPARENCY);
+        msh = new DefaultMesh(new ShadedMaterial(RGB.BLACK, RGB.BLUE, RGB.GRAY, RGB.WHITE, 10, 1, 1f), trees[depth - 1], IMesh.Queue.TRANSPARENCY);
         msh.setName(String.format("Tiefe: %d", depth));
         System.out.println("Mesh Generated");
         scene.add3DObject(msh);
@@ -139,7 +146,7 @@ public class SimpleTree implements IFractal {
             scene.remove3DObject(msh);
             tree = null;
             createObjects();
-            notifyUpdate();
+            notifyUpdate(UpdateType.DEPTH);
         }
     }
 
@@ -147,11 +154,13 @@ public class SimpleTree implements IFractal {
         if (level > depth) return;
 
         transform = Mat4.multiply(transform, Mat4.rotate(alpha, rot), Mat4.translate(0, 0, length / level));
-
-        if (tree != null) {
-            tree.merge(createGeometry(geometry.transform(Mat4.multiply(transform, Mat4.scale(1.0f / level))).getVertices()));
-        } else {
-            tree = createGeometry(geometry.transform(Mat4.multiply(transform, Mat4.scale(1.0f / level))).getVertices());
+        {
+            TransformableGeometry tg = geometry.transform(Mat4.multiply(transform, Mat4.scale(1.0f / level)));
+            if (tree != null) {
+                tree.merge(createGeometry(tg.getVertices(), tg.getNormals()));
+            } else {
+                tree = createGeometry(tg.getVertices(), tg.getNormals());
+            }
         }
         recursiveFract(++level, this.alpha, Vec3.Y, transform);
         recursiveFract(level, -this.alpha, Vec3.Y, transform);
@@ -159,7 +168,7 @@ public class SimpleTree implements IFractal {
         recursiveFract(level, -this.alpha, Vec3.X, transform);
     }
 
-    private MergeGeometry createGeometry(float[] vertices) {
+    private MergeGeometry createGeometry(float[] vertices, float[] normals) {
         float[] colors = new float[36 * 4];
         for (int i = 0; i < colors.length; i += 4) {
             colors[i + 0] = 0.2f; //R
@@ -167,7 +176,7 @@ public class SimpleTree implements IFractal {
             colors[i + 2] = 0.2f; //B
             colors[i + 3] = 1; //A
         }
-        return MergeGeometry.createVC(IGeometry.Primitive.TRIANGLES, vertices, colors);
+        return MergeGeometry.createVNC(IGeometry.Primitive.TRIANGLES, vertices, normals, colors);
     }
 
     @Override
@@ -191,12 +200,12 @@ public class SimpleTree implements IFractal {
 
     @Override
     public int getVerticesCount() {
-        return trees[depth-1].getVerticesCount();
+        return trees[depth - 1].getVerticesCount();
     }
 
     @Override
     public int getTrianglesCount() {
-        return trees[depth-1].getTrianglesCount();
+        return trees[depth - 1].getTrianglesCount();
     }
 
     @Override
@@ -213,13 +222,30 @@ public class SimpleTree implements IFractal {
         }
     }
 
-    private void notifyUpdate() {
-        verticesCount.setContent(String.format("%,d", getVerticesCount()));
-        trianglesCount.setContent(String.format("%,d", getTrianglesCount()));
-        listeners.forEach(l ->  l.notifyUpdate(this));
+    @Override
+    public ILight getLight() {
+        return light;
     }
 
     private void setLightState(boolean state) {
-        this.lightState = state;
+        if (this.lightState != state) {
+            this.lightState = state;
+            notifyUpdate(UpdateType.LIGHT);
+        }
+    }
+
+    @Override
+    public boolean getLightState() {
+        return lightState;
+    }
+
+    private void notifyUpdate(UpdateType t) {
+        switch (t) {
+            case DEPTH:
+                verticesCount.setContent(String.format("%,d", getVerticesCount()));
+                trianglesCount.setContent(String.format("%,d", getTrianglesCount()));
+                break;
+        }
+        listeners.forEach(l -> l.notifyUpdate(this, t));
     }
 }

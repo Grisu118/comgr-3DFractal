@@ -197,5 +197,11 @@ public class MergeGeometry extends AbstractGeometry {
         return new MergeGeometry(type, attributes, data);
     }
 
+    public static MergeGeometry createVNC(Primitive type, float[] vertices, float[] normals, float[] colors) {
+        IGeometryAttribute[] attributes = { POSITION_ARRAY, NORMAL_ARRAY, COLOR_ARRAY };
+        float[][] data = { vertices, normals, colors };
+        return new MergeGeometry(type, attributes, data);
+    }
+
 
 }
