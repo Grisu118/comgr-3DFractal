@@ -18,17 +18,19 @@ import ch.fhnw.util.math.Vec3;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by benjamin on 29.10.2015.
  */
-public final class FractalViewer {
+public final class FractalViewer implements IUpdateListener{
 
     private List<IFractal> fractals = new ArrayList<>();
     private IFractal activeFractal;
+    private final IController controller;
 
     public FractalViewer() {
-        IController controller = new DefaultController();
+        controller = new DefaultController();
         controller.run((time) -> {
             // Create view
             IView view = new DefaultView(controller, 100, 100, 500, 500, IView.INTERACTIVE_VIEW, "3D Fractal Viewer");
@@ -42,6 +44,7 @@ public final class FractalViewer {
             controller.setCamera(view, camera);
 
             activeFractal = new SimpleTree(1,0.05f,0.05f,30, scene);
+            activeFractal.registerUpdateListener(this);
 
             // Add an exit button
             controller.getUI().addWidget(new Button(0, 0, "Quit", "Quit", KeyEvent.VK_ESCAPE, (button, v) -> System.exit(0)));
@@ -52,4 +55,10 @@ public final class FractalViewer {
 
     }
 
+    @Override
+    public void notifyUpdate(IFractal frac) {
+        if (Objects.equals(activeFractal, frac)) {
+            controller.getUI().setMessage(String.format("Vertices: %,d \nTriangles: %,d", activeFractal.getVerticesCount(), activeFractal.getTrianglesCount()));
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package ch.fhnw.comgr.fractal.fractals;
 
+import ch.fhnw.comgr.fractal.IUpdateListener;
 import ch.fhnw.ether.ui.IWidget;
 
 import java.util.List;
@@ -28,5 +29,8 @@ public interface IFractal {
     int getVerticesCount();
 
     int getTrianglesCount();
+
+    void registerUpdateListener(IUpdateListener listener);
+    void removeUpdateListener(IUpdateListener listener);
 
 }

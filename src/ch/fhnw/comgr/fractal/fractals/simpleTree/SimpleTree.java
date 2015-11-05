@@ -1,6 +1,8 @@
 package ch.fhnw.comgr.fractal.fractals.simpleTree;
 
+import ch.fhnw.comgr.fractal.IUpdateListener;
 import ch.fhnw.comgr.fractal.fractals.IFractal;
+import ch.fhnw.comgr.fractal.ui.SmallSlider;
 import ch.fhnw.comgr.fractal.util.MergeGeometry;
 import ch.fhnw.comgr.fractal.util.TransformableGeometry;
 import ch.fhnw.ether.scene.IScene;
@@ -16,8 +18,7 @@ import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
 import ch.fhnw.util.math.Vec4;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by benjamin on 29.10.2015.
@@ -39,6 +40,8 @@ public class SimpleTree implements IFractal {
     private IScene scene;
     private List<IWidget> widgets = new ArrayList<>();
     private IMesh msh;
+
+    private Set<IUpdateListener> listeners = new HashSet<>();
 
     public SimpleTree(float length, float width, float height, float alpha, IScene scene) {
         this.length = length;
@@ -77,7 +80,7 @@ public class SimpleTree implements IFractal {
         };
         this.geometry = new TransformableGeometry(vec4s);
 
-        widgets.add(new Slider(1,1,"Tiefe", "Die Maximale Tiefe", 0, (slider, view) -> updateDepth(slider.getValue(), view)));
+        widgets.add(new SmallSlider(1,1,"Tiefe", null, 0, (slider, view) -> updateDepth(slider.getValue(minDepth, maxDepth))));
 
         init();
     }
@@ -95,16 +98,15 @@ public class SimpleTree implements IFractal {
         System.out.println("Mesh Added");
     }
 
-    private void updateDepth(float value, IView view) {
-        int n = maxDepth - minDepth;
-        int d = Math.round(value*n)+1;
-        if (depth != d) {
-            depth = d;
+    private void updateDepth(int value) {
+        System.out.println(value);
+        if (depth != value) {
+            depth = value;
             scene.remove3DObject(msh);
             tree = null;
             createObjects();
+            notifyUpdate();
         }
-        System.out.println(String.format("Vertices: %,d \nTriangles: %,d", getVerticesCount(), getTrianglesCount()));
     }
 
     private void recursiveFract(int level, float alpha, Vec3 rot, Mat4 transform) {
@@ -161,5 +163,23 @@ public class SimpleTree implements IFractal {
     @Override
     public int getTrianglesCount() {
         return trees[depth-1].getTrianglesCount();
+    }
+
+    @Override
+    public void registerUpdateListener(IUpdateListener listener) {
+        if (listener != null) {
+            listeners.add(listener);
+        }
+    }
+
+    @Override
+    public void removeUpdateListener(IUpdateListener listener) {
+        if (listener != null) {
+            listeners.remove(listener);
+        }
+    }
+
+    private void notifyUpdate() {
+        listeners.forEach(l ->  l.notifyUpdate(this));
     }
 }
