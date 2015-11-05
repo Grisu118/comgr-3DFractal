@@ -2,6 +2,7 @@ package ch.fhnw.comgr.fractal.fractals.simpleTree;
 
 import ch.fhnw.comgr.fractal.IUpdateListener;
 import ch.fhnw.comgr.fractal.fractals.IFractal;
+import ch.fhnw.comgr.fractal.ui.BooleanWidget;
 import ch.fhnw.comgr.fractal.ui.SmallSlider;
 import ch.fhnw.comgr.fractal.ui.TextWidget;
 import ch.fhnw.comgr.fractal.util.MergeGeometry;
@@ -45,6 +46,7 @@ public class SimpleTree implements IFractal {
     private Set<IUpdateListener> listeners = new HashSet<>();
     private TextWidget verticesCount;
     private TextWidget trianglesCount;
+    private boolean lightState;
 
     public SimpleTree(float length, float width, float height, float alpha, IScene scene) {
         this.length = length;
@@ -91,11 +93,12 @@ public class SimpleTree implements IFractal {
     }
 
     private void createWidgets() {
-        widgets.add(new SmallSlider(0,4,"Tiefe", null, 0, (slider, view) -> updateDepth(slider.getValue(minDepth, maxDepth))));
+        widgets.add(new SmallSlider(0,4,"Tiefe", null, 0, (s, v) -> updateDepth(s.getValue(minDepth, maxDepth))));
         verticesCount = new TextWidget(0,2, 60, "Vertices:");
         trianglesCount = new TextWidget(0,3, 60, "Triangles:");
         widgets.add(verticesCount);
         widgets.add(trianglesCount);
+        widgets.add(new BooleanWidget(0, 5, "Light", "On", "Off", "Turn on/off Light", (w, v) -> setLightState(w.getValue())));
     }
 
     private void createObjects() {
@@ -112,7 +115,6 @@ public class SimpleTree implements IFractal {
     }
 
     private void updateDepth(int value) {
-        System.out.println(value);
         if (depth != value) {
             depth = value;
             scene.remove3DObject(msh);
@@ -196,5 +198,9 @@ public class SimpleTree implements IFractal {
         verticesCount.setContent(String.format("%,d", getVerticesCount()));
         trianglesCount.setContent(String.format("%,d", getTrianglesCount()));
         listeners.forEach(l ->  l.notifyUpdate(this));
+    }
+
+    private void setLightState(boolean state) {
+        this.lightState = state;
     }
 }
