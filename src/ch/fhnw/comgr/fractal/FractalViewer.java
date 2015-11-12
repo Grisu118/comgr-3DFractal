@@ -2,6 +2,7 @@ package ch.fhnw.comgr.fractal;
 
 import ch.fhnw.comgr.fractal.fractals.IFractal;
 import ch.fhnw.comgr.fractal.fractals.simpleTree.SimpleTree;
+import ch.fhnw.comgr.fractal.fractals.simpleTree.SimpleTree2;
 import ch.fhnw.comgr.fractal.util.UpdateType;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.controller.IController;
