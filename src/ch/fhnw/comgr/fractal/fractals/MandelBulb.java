@@ -57,6 +57,28 @@ public class MandelBulb {
 
         return new float[]{newX, newY, newZ};
     }
+    /**
+     *
+     * @param v The vector as Vec3 that will be transformed into a MandelBulb vector.
+     * @param n The n-th power of the vector. (Dimension)
+     * @return The transformed vector.
+     */
+    private static float[] transformVector(Vec3 v, int n) {
+        double toRad = (Math.PI/180.0);
+
+        float r = (float) Math.sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
+        float phi = (float) (Math.atan(v.y/v.x) * toRad);
+        float theta = (float) (Math.atan(Math.sqrt(v.x*v.x+v.y*v.y)) * toRad);
+
+        // Store "r to the power" of n to save some calculation time.
+        float r_pow_n = (float) Math.pow(r, n);
+        float newX = (float) (r_pow_n * Math.sin(theta*n) * Math.cos(phi*n));
+        float newY = (float) (r_pow_n * Math.sin(theta*n) * Math.sin(phi*n));
+        float newZ = (float) (r_pow_n * Math.cos(theta*n));
+
+        return new float[]{newX, newY, newZ};
+        // TODO Maybe we want to return a Vec3 here?
+    }
 
     /*
      * The input is the array of all points that have to be transformed.
