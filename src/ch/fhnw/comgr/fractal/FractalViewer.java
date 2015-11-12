@@ -9,26 +9,21 @@ import ch.fhnw.ether.scene.DefaultScene;
 import ch.fhnw.ether.scene.IScene;
 import ch.fhnw.ether.scene.camera.Camera;
 import ch.fhnw.ether.scene.camera.ICamera;
-import ch.fhnw.ether.scene.light.DirectionalLight;
-import ch.fhnw.ether.scene.light.ILight;
-import ch.fhnw.ether.scene.light.PointLight;
 import ch.fhnw.ether.scene.mesh.IMesh;
-import ch.fhnw.ether.scene.mesh.MeshLibrary;
+import ch.fhnw.ether.scene.mesh.MeshUtilities;
 import ch.fhnw.ether.ui.Button;
 import ch.fhnw.ether.view.IView;
 import ch.fhnw.ether.view.gl.DefaultView;
-import ch.fhnw.util.color.RGB;
-import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 /**
- * Created by benjamin on 29.10.2015.
+ * Main Class for the Fractal Viewer.
+ * @author Benjamin Leber
  */
 public final class FractalViewer implements IUpdateListener {
 
@@ -52,7 +47,7 @@ public final class FractalViewer implements IUpdateListener {
             scene.add3DObject(camera);
             controller.setCamera(view, camera);
 
-            IMesh ground = MeshLibrary.createGroundPlane();
+            IMesh ground = MeshUtilities.createGroundPlane();
             scene.add3DObject(ground);
 
             activeFractal = new SimpleTree(1, 0.05f, 0.05f, 30, scene);
