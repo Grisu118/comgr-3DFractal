@@ -1,6 +1,7 @@
 package ch.fhnw.comgr.fractal;
 
 import ch.fhnw.comgr.fractal.fractals.IFractal;
+import ch.fhnw.comgr.fractal.fractals.mandel.MandelBulb;
 import ch.fhnw.comgr.fractal.fractals.simpleTree.SimpleTree;
 import ch.fhnw.comgr.fractal.fractals.simpleTree.SimpleTree2;
 import ch.fhnw.comgr.fractal.util.UpdateType;
@@ -48,10 +49,9 @@ public final class FractalViewer implements IUpdateListener {
             scene.add3DObject(camera);
             controller.setCamera(view, camera);
 
-            IMesh ground = MeshUtilities.createGroundPlane();
-            scene.add3DObject(ground);
 
-            activeFractal = new SimpleTree(1, 0.05f, 0.05f, 30, scene);
+            activeFractal = new MandelBulb(scene);
+            activeFractal.init();
             activeFractal.registerUpdateListener(this);
 
             scene.add3DObject(activeFractal.getLight());

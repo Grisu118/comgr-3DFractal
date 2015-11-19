@@ -113,7 +113,6 @@ public class SimpleTree implements IFractal {
 
         createWidgets();
 
-        init();
         trianglesCount.setContent(String.format("%,d", getTrianglesCount()));
         verticesCount.setContent(String.format("%,d", getVerticesCount()));
     }
