@@ -77,11 +77,11 @@ public class MandelBulb implements IFractal{
             x += x0; y+=y0; z+=z0;
             iter++;
 
-            if(iter > maxIter) {
+            if(x*x + y*y + z*z > 10) {
+                x = 0; y = 0; z = 0;
                 break;
             }
-            if(x*x + y*x + z*z > 10) {
-                x = 0; y = 0; z = 0;
+            if(iter > maxIter) {
                 break;
             }
         }
@@ -113,12 +113,12 @@ public class MandelBulb implements IFractal{
     @Override
     public void init() {
         mat = new PointMaterial(new RGBA(0.8f, 0.8f, 0, 0.8f), 3);
-        float[] vert = createCube(50);
+        float[] vert = createCube(100);
         for(int i = 0; i < 4; i++) {
             formMandelBulb(vert, 8);
         }
-        System.out.println(Arrays.toString(vert));
         float[] norm = new float[vert.length];
+
         geometry = DefaultGeometry.createVN(IGeometry.Primitive.POINTS, vert, norm);
         mesh = new DefaultMesh(mat, geometry);
         scene.add3DObject(mesh);
