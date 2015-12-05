@@ -112,7 +112,7 @@ public class MandelBulb implements IFractal{
 
     @Override
     public void init() {
-        mat = new PointMaterial(new RGBA(0.8f, 0.8f, 0, 0.8f), 3);
+        mat = new MandelBulbMaterial(new MandelBulbShader(getClass()));
         float[] vert = createCube(100);
         for(int i = 0; i < 4; i++) {
             formMandelBulb(vert, 8);
