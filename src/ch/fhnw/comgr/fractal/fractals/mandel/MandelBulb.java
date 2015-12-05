@@ -112,14 +112,15 @@ public class MandelBulb implements IFractal{
 
     @Override
     public void init() {
-        mat = new MandelBulbMaterial(new MandelBulbShader(getClass()));
+
         float[] vert = createCube(100);
         for(int i = 0; i < 4; i++) {
             formMandelBulb(vert, 8);
         }
-        float[] norm = new float[vert.length];
-
-        geometry = DefaultGeometry.createVN(IGeometry.Primitive.POINTS, vert, norm);
+        float[] color = new float[vert.length/3*4];
+        float[] pointSize = new float[vert.length/3];
+        geometry = createVCP(IGeometry.Primitive.POINTS, vert, color, pointSize);
+        mat = new MandelBulbMaterial();
         mesh = new DefaultMesh(mat, geometry);
         scene.add3DObject(mesh);
     }
@@ -179,6 +180,12 @@ public class MandelBulb implements IFractal{
             }
         }
         return out;
+    }
+
+    public static DefaultGeometry createVCP(IGeometry.Primitive type, float[] vertices, float[] colors, float[] pointSize) {
+        IGeometry.IGeometryAttribute[] attributes = { IGeometry.POSITION_ARRAY, IGeometry.COLOR_ARRAY, IGeometry.POINT_SIZE_ARRAY };
+        float[][] data = { vertices, colors, pointSize };
+        return new DefaultGeometry(type, attributes, data);
     }
 
 }

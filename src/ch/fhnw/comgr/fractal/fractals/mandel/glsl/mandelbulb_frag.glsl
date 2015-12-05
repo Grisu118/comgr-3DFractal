@@ -1,4 +1,4 @@
-#version 340
+#version 330
 
 in vec4 vsColor;
 

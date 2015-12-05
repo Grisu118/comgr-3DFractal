@@ -1,11 +1,11 @@
-#version 340
+#version 330
 
 #include <view_block.glsl>
 
 uniform bool useVertexColors;
 
 uniform vec4 materialColor;
-uniform float pointSize;
+uniform float vertexPointSize;
 
 in vec4 vertexPosition;
 in vec4 vertexColor;
@@ -17,6 +17,6 @@ void main() {
 	if (useVertexColors)
 		vsColor *= vertexColor;
 
-	gl_PointSize = pointSize;
+	gl_PointSize = vertexPointSize;
 	gl_Position = view.viewProjMatrix * vertexPosition;
 }
