@@ -10,7 +10,7 @@ public class FractalGenerator implements Runnable {
     Points points;
 
     float boxRadius = 1.5f;
-    float pointsPerAxis = 150.0f;
+    float pointsPerAxis = 200f;
     float order = 6f;
     float maxIterations = 8f;
 

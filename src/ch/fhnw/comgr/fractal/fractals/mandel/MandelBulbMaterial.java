@@ -15,14 +15,14 @@ import java.util.Arrays;
 public class MandelBulbMaterial extends AbstractMaterial implements ICustomMaterial {
 
     private final IShader shader;
-    private float pointSize;
+    private float size;
     private RGBA color;
 
     public MandelBulbMaterial() {
-        super(material(IMaterial.COLOR, IMaterial.POINT_SIZE), geometry(IGeometry.COLOR_ARRAY, IGeometry.POINT_SIZE_ARRAY));
+        super(material(IMaterial.COLOR, IMaterial.POINT_SIZE), geometry(IGeometry.POSITION_ARRAY, null, null));
 
-        pointSize = 3;
-        color = RGBA.GRAY;
+        this.size = 3;
+        this.color = RGBA.GRAY;
         this.shader = new MandelBulbShader(getClass(), Arrays.asList(getProvidedAttributes()));
     }
 
@@ -33,12 +33,11 @@ public class MandelBulbMaterial extends AbstractMaterial implements ICustomMater
 
     @Override
     public IGeometry.Primitive getType() {
-        // default to triangles, as this is the majority of all materials
         return IGeometry.Primitive.POINTS;
     }
 
     @Override
     public Object[] getData() {
-        return data(color, pointSize);
+        return data(color, size);
     }
 }

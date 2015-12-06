@@ -41,6 +41,7 @@ import java.util.List;
  */
 public class MandelBulb implements IFractal, IEventScheduler.IAnimationAction{
 
+
     DefaultController controller = new DefaultController(30);
     Points points = new Points();
     IGeometry geometry;
@@ -59,14 +60,10 @@ public class MandelBulb implements IFractal, IEventScheduler.IAnimationAction{
         new Thread(new FractalGenerator(points)).start();
 
         float[] vert = new float[]{1, 1, 1};
-//        color = new float[]{0.8f, 0.8f, 0.8f, 0.8f};
-//        pointSize = new float[]{2};
-//        geometry = createVCP(IGeometry.Primitive.POINTS, vert, color, pointSize);
-//        mat = new MandelBulbMaterial();
-//        mesh = new DefaultMesh(mat, geometry);
-//        scene.add3DObject(mesh);
-        geometry = DefaultGeometry.createVN(IGeometry.Primitive.POINTS, vert ,new float[vert.length] );
-        mat = new PointMaterial(RGBA.GRAY, 3f);
+        color = new float[]{0.8f, 0.8f, 0.8f, 0.8f};
+        pointSize = new float[]{2};
+        geometry = DefaultGeometry.createV(IGeometry.Primitive.POINTS, vert);
+        mat = new PointMaterial(RGBA.GRAY, 5f);
         mesh = new DefaultMesh(mat, geometry);
         scene.add3DObject(mesh);
 
@@ -126,7 +123,6 @@ public class MandelBulb implements IFractal, IEventScheduler.IAnimationAction{
             if(!points.isEmpty()) {
                 float[] vert = points.getAllPoints();
                 data[0] = vert;
-                data[1] = new float[vert.length];
             }
         });
     }
