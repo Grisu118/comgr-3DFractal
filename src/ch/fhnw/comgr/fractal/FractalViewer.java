@@ -2,18 +2,13 @@ package ch.fhnw.comgr.fractal;
 
 import ch.fhnw.comgr.fractal.fractals.IFractal;
 import ch.fhnw.comgr.fractal.fractals.mandel.MandelBulb;
-import ch.fhnw.comgr.fractal.fractals.simpleTree.SimpleTree;
-import ch.fhnw.comgr.fractal.fractals.simpleTree.SimpleTree2;
 import ch.fhnw.comgr.fractal.util.UpdateType;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.controller.IController;
-import ch.fhnw.ether.render.ShaderBuilder;
 import ch.fhnw.ether.scene.DefaultScene;
 import ch.fhnw.ether.scene.IScene;
 import ch.fhnw.ether.scene.camera.Camera;
 import ch.fhnw.ether.scene.camera.ICamera;
-import ch.fhnw.ether.scene.mesh.IMesh;
-import ch.fhnw.ether.scene.mesh.MeshUtilities;
 import ch.fhnw.ether.ui.Button;
 import ch.fhnw.ether.view.IView;
 import ch.fhnw.ether.view.gl.DefaultView;

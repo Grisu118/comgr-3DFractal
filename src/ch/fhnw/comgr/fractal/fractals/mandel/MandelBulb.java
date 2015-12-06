@@ -1,9 +1,13 @@
 package ch.fhnw.comgr.fractal.fractals.mandel;
 
 import ch.fhnw.comgr.fractal.IUpdateListener;
+import ch.fhnw.comgr.fractal.fractals.FractalGenerator;
 import ch.fhnw.comgr.fractal.fractals.IFractal;
+import ch.fhnw.comgr.fractal.util.Points;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.controller.IController;
+import ch.fhnw.ether.controller.event.DefaultEventScheduler;
+import ch.fhnw.ether.controller.event.IEventScheduler;
 import ch.fhnw.ether.scene.DefaultScene;
 import ch.fhnw.ether.scene.IScene;
 import ch.fhnw.ether.scene.camera.Camera;
@@ -35,94 +39,38 @@ import java.util.List;
 /**
  * TODO this needs a nice description.
  */
-public class MandelBulb implements IFractal{
+public class MandelBulb implements IFractal, IEventScheduler.IAnimationAction{
 
+    DefaultController controller = new DefaultController(30);
+    Points points = new Points();
     IGeometry geometry;
     IMaterial mat;
     IMesh mesh;
     IScene scene;
+    float[] color = null;
+    float[] pointSize = null;
 
     public MandelBulb(IScene _scene) {
         scene = _scene;
     }
 
-    /**
-     *
-     * @param v The vector as float array that will be transformed into a MandelBulb vector.
-     * @param n The n-th power of the vector. (Dimension)
-     * @return The transformed vector.
-     */
-    private static float[] transformVector(float[] v, int n) {
-        float x0 = v[0];
-        float y0 = v[1];
-        float z0 = v[2];
-        float x = 0, y = 0, z = 0;
-        int iter = 0, maxIter = 8;
-        while(true) {
-
-
-            // Mandelbulb calculation source: https://en.wikipedia.org/wiki/Mandelbulb
-
-            // Radius
-            float r = (float) Math.sqrt(x * x + y * y + z * z);
-            float phi = (float) (Math.atan2(y, x));
-            float theta = (float) (Math.atan2(Math.sqrt(x * x + y * y), z));
-
-            // Store "r to the power" of n to save some calculation time.
-            float r_pow_n = (float) Math.pow(r, n);
-            x = (float) (r_pow_n * Math.sin(theta * n) * Math.cos(phi * n));
-            y = (float) (r_pow_n * Math.sin(theta * n) * Math.sin(phi * n));
-            z = (float) (r_pow_n * Math.cos(theta * n));
-
-            x += x0; y+=y0; z+=z0;
-            iter++;
-
-            if(x*x + y*y + z*z > 10) {
-                x = 0; y = 0; z = 0;
-                break;
-            }
-            if(iter > maxIter) {
-                break;
-            }
-        }
-
-        return new float[]{x, y, z};
-    }
-
-    /*
-     * The input is the array of all points that have to be transformed.
-     * Groups of 3 will be transformed and the input is overwritten and returned.
-     */
-    private static float[]  formMandelBulb(float[] input, int n) {
-        // To avoid problems we have to check if it's a legal amount of values in the input array.
-        if (input.length == 0 || input.length % 3 != 0) {
-            throw new IllegalArgumentException("The array is empty or has not enough values.");
-        } else {
-
-            float[] res;
-            for (int i = 0; i < input.length; i += 3) {
-                res = transformVector(new float[]{input[i], input[i+1], input[i+2]}, n);
-                input[i]   = res[0];
-                input[i+1] = res[1];
-                input[i+2] = res[2];
-            }
-        }
-        return input;
-    }
-
     @Override
     public void init() {
+        new Thread(new FractalGenerator(points)).start();
 
-        float[] vert = createCube(100);
-        for(int i = 0; i < 4; i++) {
-            formMandelBulb(vert, 8);
-        }
-        float[] color = new float[vert.length/3*4];
-        float[] pointSize = new float[vert.length/3];
-        geometry = createVCP(IGeometry.Primitive.POINTS, vert, color, pointSize);
-        mat = new MandelBulbMaterial();
+        float[] vert = new float[]{1, 1, 1};
+//        color = new float[]{0.8f, 0.8f, 0.8f, 0.8f};
+//        pointSize = new float[]{2};
+//        geometry = createVCP(IGeometry.Primitive.POINTS, vert, color, pointSize);
+//        mat = new MandelBulbMaterial();
+//        mesh = new DefaultMesh(mat, geometry);
+//        scene.add3DObject(mesh);
+        geometry = DefaultGeometry.createVN(IGeometry.Primitive.POINTS, vert ,new float[vert.length] );
+        mat = new PointMaterial(RGBA.GRAY, 3f);
         mesh = new DefaultMesh(mat, geometry);
         scene.add3DObject(mesh);
+
+        controller.animate(this);
     }
 
     @Override
@@ -165,22 +113,6 @@ public class MandelBulb implements IFractal{
         return null;
     }
 
-    private static float[] createCube(int n) {
-        float step = 1.5f/(2*((float)n));
-        int c = 0;
-        float[] out = new float[n*n*n*3];
-        for(int i = -n; i < n; i+=2) {
-            for(int j = -n;j < n; j+=2) {
-                for(int k = -n; k < n; k+=2) {
-                    out[c] = step*i;
-                    out[c+1] = step*j;
-                    out[c+2] = step*k;
-                    c+=3;
-                }
-            }
-        }
-        return out;
-    }
 
     public static DefaultGeometry createVCP(IGeometry.Primitive type, float[] vertices, float[] colors, float[] pointSize) {
         IGeometry.IGeometryAttribute[] attributes = { IGeometry.POSITION_ARRAY, IGeometry.COLOR_ARRAY, IGeometry.POINT_SIZE_ARRAY };
@@ -188,4 +120,14 @@ public class MandelBulb implements IFractal{
         return new DefaultGeometry(type, attributes, data);
     }
 
+    @Override
+    public void run(double v, double v1) {
+        mesh.getGeometry().modify((IGeometry.IGeometryAttribute[] id, float[][] data) -> {
+            if(!points.isEmpty()) {
+                float[] vert = points.getAllPoints();
+                data[0] = vert;
+                data[1] = new float[vert.length];
+            }
+        });
+    }
 }
