@@ -63,7 +63,7 @@ public class MandelBulb implements IFractal, IEventScheduler.IAnimationAction{
         color = new float[]{0.8f, 0.8f, 0.8f, 0.8f};
         pointSize = new float[]{2};
         geometry = DefaultGeometry.createV(IGeometry.Primitive.POINTS, vert);
-        mat = new PointMaterial(RGBA.GRAY, 5f);
+        mat = new MandelBulbMaterial(RGBA.GRAY, 5f);
         mesh = new DefaultMesh(mat, geometry);
         scene.add3DObject(mesh);
 

@@ -19,10 +19,14 @@ public class MandelBulbMaterial extends AbstractMaterial implements ICustomMater
     private RGBA color;
 
     public MandelBulbMaterial() {
+        this(RGBA.GRAY, 5f);
+    }
+
+    public MandelBulbMaterial(RGBA color, float pointSize) {
         super(material(IMaterial.COLOR, IMaterial.POINT_SIZE), geometry(IGeometry.POSITION_ARRAY, null, null));
 
-        this.size = 3;
-        this.color = RGBA.GRAY;
+        this.size = pointSize;
+        this.color = color;
         this.shader = new MandelBulbShader(getClass(), Arrays.asList(getProvidedAttributes()));
     }
 
