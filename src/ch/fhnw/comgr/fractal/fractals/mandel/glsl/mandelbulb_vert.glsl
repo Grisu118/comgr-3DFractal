@@ -66,7 +66,7 @@ void main() {
     vec4 interplatedColor = s*vsColor + (1-s)*fogColor;
     vsColor.rgb = min(interplatedColor.rgb, whiteColor.rgb);
 
-	gl_PointSize = 3; //TODO form java code
+	gl_PointSize = vertexPointSize;
 	gl_Position = vertex;
 }
 
