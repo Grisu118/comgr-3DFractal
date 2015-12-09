@@ -5,7 +5,7 @@ import ch.fhnw.comgr.fractal.util.Points;
 /**
  * Created by joel on 06/12/2015.
  */
-public class FractalGenerator implements Runnable {
+public class FractalGenerator extends Thread {
 
     Points points;
 
@@ -92,10 +92,12 @@ public class FractalGenerator implements Runnable {
                             firstPoint = false;
                             break;
                         }
+                        if(Thread.interrupted()) {
+                            return;
+                        }
                     }
                 }
             }
         }
-
     }
 }

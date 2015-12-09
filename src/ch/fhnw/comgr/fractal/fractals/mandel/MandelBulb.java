@@ -41,15 +41,13 @@ import java.util.List;
  */
 public class MandelBulb implements IFractal, IEventScheduler.IAnimationAction{
 
-
+    FractalGenerator generator;
     DefaultController controller = new DefaultController(30);
     Points points = new Points();
     IGeometry geometry;
     IMaterial mat;
     IMesh mesh;
     IScene scene;
-    float[] color = null;
-    float[] pointSize = null;
 
     public MandelBulb(IScene _scene) {
         scene = _scene;
@@ -57,12 +55,9 @@ public class MandelBulb implements IFractal, IEventScheduler.IAnimationAction{
 
     @Override
     public void init() {
-        new Thread(new FractalGenerator(points)).start();
-
-        float[] vert = new float[]{1, 1, 1};
-        color = new float[]{0.8f, 0.8f, 0.8f, 0.8f};
-        pointSize = new float[]{2};
-        geometry = DefaultGeometry.createV(IGeometry.Primitive.POINTS, vert);
+        generator = new FractalGenerator(points);
+        generator.start();
+        geometry = DefaultGeometry.createV(IGeometry.Primitive.POINTS, new float[0]);
         mat = new MandelBulbMaterial(RGBA.GRAY, 5f);
         mesh = new DefaultMesh(mat, geometry);
         scene.add3DObject(mesh);
