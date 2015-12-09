@@ -8,7 +8,6 @@ import java.util.ArrayList;
 public class Points {
 
     ArrayList<Float> points = new ArrayList<>();
-    ArrayList<Float> colors = new ArrayList<>();
     ArrayList<Float> size = new ArrayList<>();
 
     public Points(){}
@@ -17,10 +16,6 @@ public class Points {
         points.add(x);
         points.add(y);
         points.add(z);
-        colors.add(0.8f);
-        colors.add(0.8f);
-        colors.add(0.8f);
-        colors.add(0.8f);
         size.add(2f);
     }
 
@@ -28,14 +23,6 @@ public class Points {
         float[] ret = new float[points.size()];
         for (int i = 0; i < ret.length; i++) {
             ret[i] = points.get(i);
-        }
-        return ret;
-    }
-
-    public synchronized float[] getAllColors() {
-        float[] ret = new float[colors.size()];
-        for (int i = 0; i < ret.length; i++) {
-            ret[i] = colors.get(i);
         }
         return ret;
     }
