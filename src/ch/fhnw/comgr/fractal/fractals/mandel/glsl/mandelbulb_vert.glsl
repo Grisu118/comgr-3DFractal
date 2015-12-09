@@ -56,7 +56,7 @@ void main() {
 	vsColor = materialColor;
 	if (isColorized) {
 	    float dist = length(vertexPosition);
-		vsColor *= hsv_to_rgb(dist/maxDistance, 1, 1, 1);
+		vsColor = hsv_to_rgb(dist/maxDistance, 1, 1, 1);
 	}
 	vec4 whiteColor = vec4(1,1,1,1);
     float dFog = 0.3;
