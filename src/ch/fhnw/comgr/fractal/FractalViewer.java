@@ -41,7 +41,7 @@ public final class FractalViewer implements IUpdateListener {
             controller.setScene(scene);
 
             // Create and add camera
-            ICamera camera = new Camera(new Vec3(0, -5, 5), Vec3.ZERO);
+            ICamera camera = new Camera(new Vec3(0, -2, 2), Vec3.ZERO);
             scene.add3DObject(camera);
             controller.setCamera(view, camera);
 
