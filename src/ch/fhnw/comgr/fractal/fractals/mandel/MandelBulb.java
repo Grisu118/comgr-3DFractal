@@ -3,6 +3,7 @@ package ch.fhnw.comgr.fractal.fractals.mandel;
 import ch.fhnw.comgr.fractal.IUpdateListener;
 import ch.fhnw.comgr.fractal.fractals.FractalGenerator;
 import ch.fhnw.comgr.fractal.fractals.IFractal;
+import ch.fhnw.comgr.fractal.ui.BooleanWidget;
 import ch.fhnw.comgr.fractal.util.Points;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.controller.IController;
@@ -45,9 +46,10 @@ public class MandelBulb implements IFractal, IEventScheduler.IAnimationAction{
     DefaultController controller = new DefaultController(30);
     Points points = new Points();
     IGeometry geometry;
-    IMaterial mat;
+    MandelBulbMaterial mat;
     IMesh mesh;
     IScene scene;
+    private List<IWidget> widgets;
 
     public MandelBulb(IScene _scene) {
         scene = _scene;
@@ -55,6 +57,9 @@ public class MandelBulb implements IFractal, IEventScheduler.IAnimationAction{
 
     @Override
     public void init() {
+        widgets = new ArrayList<>();
+        widgets.add(new BooleanWidget(0, 5, "Color", "On", "Off", "Turn on/off Color", false, (w, v) -> mat.setColorized(w.getValue())));
+
         generator = new FractalGenerator(points);
         generator.start();
         geometry = DefaultGeometry.createV(IGeometry.Primitive.POINTS, new float[0]);
@@ -67,7 +72,7 @@ public class MandelBulb implements IFractal, IEventScheduler.IAnimationAction{
 
     @Override
     public List<IWidget> getWidgets() {
-        return new ArrayList<IWidget>();
+        return widgets;
     }
 
     @Override

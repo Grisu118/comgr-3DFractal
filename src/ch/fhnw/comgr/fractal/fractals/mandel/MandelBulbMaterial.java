@@ -17,17 +17,23 @@ public class MandelBulbMaterial extends AbstractMaterial implements ICustomMater
     private final IShader shader;
     private float size;
     private RGBA color;
+    private boolean isColorized = false;
 
     public MandelBulbMaterial() {
         this(RGBA.GRAY, 5f);
     }
 
     public MandelBulbMaterial(RGBA color, float pointSize) {
-        super(material(IMaterial.COLOR, IMaterial.POINT_SIZE), geometry(IGeometry.POSITION_ARRAY, null, null));
+        super(material(IMaterial.COLOR, IMaterial.POINT_SIZE, new MaterialAttribute<Boolean>("custom.isColorized")), geometry(IGeometry.POSITION_ARRAY, null, null));
 
         this.size = pointSize;
         this.color = color;
         this.shader = new MandelBulbShader(getClass(), Arrays.asList(getProvidedAttributes()));
+    }
+
+    public void setColorized(boolean isColorized) {
+        this.isColorized = isColorized;
+        updateRequest();
     }
 
     @Override
@@ -42,6 +48,6 @@ public class MandelBulbMaterial extends AbstractMaterial implements ICustomMater
 
     @Override
     public Object[] getData() {
-        return data(color, size);
+        return data(color, size, isColorized);
     }
 }

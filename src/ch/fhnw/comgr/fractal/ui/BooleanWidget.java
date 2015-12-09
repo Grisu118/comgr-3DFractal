@@ -27,14 +27,19 @@ public class BooleanWidget extends AbstractWidget {
     private static final Color BOOLEAN_BG = new Color(1f, 1f, 1f, 0.25f);
     private static final Color BOOLEAN_FG = new Color(0.6f, 0, 0, 0.75f);
 
-    private boolean value = true;
+    private boolean value;
     private String onLabel;
     private String offLabel;
 
-    public BooleanWidget(int x, int y, String label, String onLabel, String offLabel, String help, IBooleanAction action) {
+    public BooleanWidget(int x, int y, String label, String onLabel, String offLabel, String help, boolean initState, IBooleanAction action) {
         super(x, y, label, help, action);
         this.onLabel = onLabel;
         this.offLabel = offLabel;
+        this.value = initState;
+    }
+
+    public BooleanWidget(int x, int y, String label, String onLabel, String offLabel, String help, IBooleanAction action) {
+        this(x, y, label, onLabel, offLabel, help, true, action);
     }
 
     public boolean getValue() {

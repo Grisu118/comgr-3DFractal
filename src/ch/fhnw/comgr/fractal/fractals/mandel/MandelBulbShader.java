@@ -37,6 +37,7 @@ public class MandelBulbShader extends AbstractShader {
         addUniform(new ColorUniform(attributes.contains(IMaterial.COLOR) ? null : () -> RGBA.WHITE));
         addUniform(new FloatUniform(IMaterial.POINT_SIZE, "vertexPointSize", attributes.contains(IMaterial.POINT_SIZE) ? null : () -> 3f));
         addUniform(new FloatUniform("custom.maxDistance", "maxDistance", () -> 0.4f));
+        addUniform(new BooleanUniform("custom.isColorized", "isColorized"));
 
         addUniform(new StateInject("shader.point_size_program", (gl, p) -> gl.glEnable(GL3.GL_PROGRAM_POINT_SIZE),
                 (gl, p) -> gl.glDisable(GL3.GL_PROGRAM_POINT_SIZE)));

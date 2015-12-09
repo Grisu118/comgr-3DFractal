@@ -7,6 +7,7 @@ uniform bool useVertexColors;
 uniform vec4 materialColor;
 uniform float vertexPointSize;
 uniform float maxDistance;
+uniform bool isColorized;
 
 in vec4 vertexPosition;
 in vec4 vertexColor;
@@ -53,7 +54,7 @@ vec4 hsv_to_rgb(float h, float s, float v, float a)
 void main() {
     vec4 vertex = view.viewProjMatrix * vertexPosition;
 	vsColor = materialColor;
-	if (useVertexColors) {
+	if (isColorized) {
 	    float dist = length(vertexPosition);
 		vsColor *= hsv_to_rgb(dist/maxDistance, 1, 1, 1);
 	}
