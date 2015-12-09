@@ -1,6 +1,7 @@
 package ch.fhnw.comgr.fractal.fractals.mandel;
 
 import ch.fhnw.ether.render.shader.IShader;
+import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
 import ch.fhnw.ether.scene.mesh.material.AbstractMaterial;
 import ch.fhnw.ether.scene.mesh.material.ICustomMaterial;
@@ -18,13 +19,14 @@ public class MandelBulbMaterial extends AbstractMaterial implements ICustomMater
     private float size;
     private RGBA color;
     private boolean isColorized = false;
+    private float maxDistance = 0.4f;
 
     public MandelBulbMaterial() {
         this(RGBA.GRAY, 5f);
     }
 
     public MandelBulbMaterial(RGBA color, float pointSize) {
-        super(material(IMaterial.COLOR, IMaterial.POINT_SIZE, new MaterialAttribute<Boolean>("custom.isColorized")), geometry(IGeometry.POSITION_ARRAY, null, null));
+        super(material(IMaterial.COLOR, IMaterial.POINT_SIZE, new MaterialAttribute<Boolean>("custom.isColorized"), new MaterialAttribute<Float>("custom.maxDistance")), geometry(IGeometry.POSITION_ARRAY, null, null));
 
         this.size = pointSize;
         this.color = color;
@@ -33,6 +35,11 @@ public class MandelBulbMaterial extends AbstractMaterial implements ICustomMater
 
     public void setColorized(boolean isColorized) {
         this.isColorized = isColorized;
+        updateRequest();
+    }
+
+    public void setMaxDistance(float maxDistance) {
+        this.maxDistance = maxDistance;
         updateRequest();
     }
 
@@ -48,6 +55,6 @@ public class MandelBulbMaterial extends AbstractMaterial implements ICustomMater
 
     @Override
     public Object[] getData() {
-        return data(color, size, isColorized);
+        return data(color, size, isColorized, maxDistance);
     }
 }
