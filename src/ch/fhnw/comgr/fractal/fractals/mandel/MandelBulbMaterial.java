@@ -26,7 +26,7 @@ public class MandelBulbMaterial extends AbstractMaterial implements ICustomMater
     }
 
     public MandelBulbMaterial(RGBA color, float pointSize) {
-        super(material(IMaterial.COLOR, IMaterial.POINT_SIZE, new MaterialAttribute<Boolean>("custom.isColorized"), new MaterialAttribute<Float>("custom.maxDistance")), geometry(IGeometry.POSITION_ARRAY, null, null));
+        super(material(IMaterial.COLOR, IMaterial.POINT_SIZE, new MaterialAttribute<Boolean>("mandelbulb.isColorized"), new MaterialAttribute<Float>("mandelbulb.maxDistance")), geometry(IGeometry.POSITION_ARRAY, null, null));
 
         this.size = pointSize;
         this.color = color;
