@@ -34,12 +34,13 @@ import java.awt.Color;
 import ch.fhnw.ether.controller.event.IPointerEvent;
 import ch.fhnw.ether.ui.AbstractWidget;
 import ch.fhnw.ether.ui.GraphicsPlane;
-import ch.fhnw.ether.ui.Slider;
 import ch.fhnw.ether.ui.UI;
 import ch.fhnw.ether.view.IView;
 import ch.fhnw.util.math.MathUtilities;
 
 public class SmallSlider extends AbstractWidget {
+
+
     public interface ISliderAction extends IWidgetAction<SmallSlider> {
         @Override
         void execute(SmallSlider slider, IView view);
@@ -50,11 +51,19 @@ public class SmallSlider extends AbstractWidget {
 
     private static final int SLIDER_GAP = 8;
 
-    private static final Color SLIDER_BG = new Color(1f, 1f, 1f, 0.25f);
-    private static final Color SLIDER_FG = new Color(0.6f, 0, 0, 0.75f);
+    private static final Color DEACITVATED_BG = new Color(64, 64, 64, 50);
+    private static final Color ACITVATED_BG = new Color(1f, 1f, 1f, 0.25f);
+    private Color sliderBg = ACITVATED_BG;
+    private static final Color DEACITVATED_FG = new Color(192, 192, 192, 100);
+    private static final Color ACITVATED_FG = new Color(0.6f, 0, 0, 0.75f);
+    private Color sliderFg = ACITVATED_FG;
+    private static final Color ACTIVATED_TEXT_COLOR = Color.WHITE;
+    private static final Color DEACITVATED_TEXT_COLOR = new Color(128, 128, 128, 150);
+    private Color textColor = ACTIVATED_TEXT_COLOR;
 
     private boolean sliding;
     private float value;
+    private boolean isActivated = true;
 
     public SmallSlider(int x, int y, String label, String help) {
         this(x, y, label, help, 0, null);
@@ -78,6 +87,16 @@ public class SmallSlider extends AbstractWidget {
     }
 
     /**
+     * Get the value as float between from and to.
+     * @param from the smallest value.
+     * @param to the highest value.
+     * @return float between from and to.
+     */
+    public float getValue(float from, float to) {
+        return value*(to-from)+from;
+    }
+
+    /**
      * Get the value as Int between from and to.
      * @param from the smallest value.
      * @param to the highest value.
@@ -85,6 +104,19 @@ public class SmallSlider extends AbstractWidget {
      */
     public int getValue(int from, int to) {
         return Math.round(value*(to-from))+from;
+    }
+
+    public void setActivated(boolean activated) {
+        isActivated = activated;
+        if (isActivated) {
+            sliderFg = ACITVATED_FG;
+            sliderBg = ACITVATED_BG;
+            textColor = ACTIVATED_TEXT_COLOR;
+        } else {
+            sliderFg = DEACITVATED_FG;
+            sliderBg = DEACITVATED_BG;
+            textColor = DEACITVATED_TEXT_COLOR;
+        }
     }
 
     @Override
@@ -104,11 +136,11 @@ public class SmallSlider extends AbstractWidget {
         int bg = SmallSlider.SLIDER_GAP;
         int bx = getX() * (bg + bw);
         int by = getY() * (bg + bh);
-        surface.fillRect(SLIDER_BG, bx + 4, surface.getHeight() - by - bh - 4, bw, bh);
-        surface.fillRect(SLIDER_FG, bx + 4, surface.getHeight() - by - bh - 4, (int) (value * bw), bh);
+        surface.fillRect(sliderBg, bx + 4, surface.getHeight() - by - bh - 4, bw, bh);
+        surface.fillRect(sliderFg, bx + 4, surface.getHeight() - by - bh - 4, (int) (value * bw), bh);
         String label = getLabel();
         if (label != null)
-            surface.drawString(TEXT_COLOR, label, bx + 6, surface.getHeight() - by - 8);
+            surface.drawString(textColor, label, bx + 6, surface.getHeight() - by - 8);
     }
 
     @Override
@@ -147,6 +179,9 @@ public class SmallSlider extends AbstractWidget {
     }
 
     private void updateValue(IPointerEvent e) {
+        if (!isActivated) {
+            return;
+        }
         UI ui = getUI();
         float bx = ui.getX() + getX() * (SLIDER_GAP + SLIDER_WIDTH);
         value = MathUtilities.clamp((e.getX() - bx) / SLIDER_WIDTH, 0, 1);

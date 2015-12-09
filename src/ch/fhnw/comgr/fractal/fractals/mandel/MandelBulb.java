@@ -4,6 +4,7 @@ import ch.fhnw.comgr.fractal.IUpdateListener;
 import ch.fhnw.comgr.fractal.fractals.FractalGenerator;
 import ch.fhnw.comgr.fractal.fractals.IFractal;
 import ch.fhnw.comgr.fractal.ui.BooleanWidget;
+import ch.fhnw.comgr.fractal.ui.SmallSlider;
 import ch.fhnw.comgr.fractal.util.Points;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.controller.IController;
@@ -50,6 +51,7 @@ public class MandelBulb implements IFractal, IEventScheduler.IAnimationAction{
     IMesh mesh;
     IScene scene;
     private List<IWidget> widgets;
+    private SmallSlider distanceSlider;
 
     public MandelBulb(IScene _scene) {
         scene = _scene;
@@ -57,9 +59,6 @@ public class MandelBulb implements IFractal, IEventScheduler.IAnimationAction{
 
     @Override
     public void init() {
-        widgets = new ArrayList<>();
-        widgets.add(new BooleanWidget(0, 5, "Color", "On", "Off", "Turn on/off Color", false, (w, v) -> mat.setColorized(w.getValue())));
-
         generator = new FractalGenerator(points);
         generator.start();
         geometry = DefaultGeometry.createV(IGeometry.Primitive.POINTS, new float[0]);
@@ -68,6 +67,12 @@ public class MandelBulb implements IFractal, IEventScheduler.IAnimationAction{
         scene.add3DObject(mesh);
 
         controller.animate(this);
+
+        widgets = new ArrayList<>();
+        widgets.add(new BooleanWidget(0, 5, "Color", "On", "Off", "Turn on/off Color", false, (w, v) -> {mat.setColorized(w.getValue()); distanceSlider.setActivated(w.getValue());}));
+        distanceSlider = new SmallSlider(0,4,"max Distance", null, mat.getMaxDistance(), (w, v) -> mat.setMaxDistance(w.getValue(0.01f, 1f)));
+        distanceSlider.setActivated(false);
+        widgets.add(distanceSlider);
     }
 
     @Override

@@ -43,6 +43,10 @@ public class MandelBulbMaterial extends AbstractMaterial implements ICustomMater
         updateRequest();
     }
 
+    public float getMaxDistance() {
+        return maxDistance;
+    }
+
     @Override
     public IShader getShader() {
         return shader;
