@@ -35,7 +35,7 @@ public final class FractalViewer implements IUpdateListener {
         controller = new DefaultController();
         controller.run((time) -> {
             // Create view
-            IView view = new DefaultView(controller, 100, 100, 500, 500, IView.INTERACTIVE_VIEW, "3D Fractal Viewer");
+            IView view = new DefaultView(controller, 100, 100, 500, 500, new IView.Config(IView.ViewType.INTERACTIVE_VIEW, 0, IView.ViewFlag.SMOOTH_LINES), "3D Fractal Viewer");
             // Create scene
             scene = new DefaultScene(controller);
             controller.setScene(scene);
