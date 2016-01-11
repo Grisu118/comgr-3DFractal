@@ -5,23 +5,29 @@ import ch.fhnw.comgr.fractal.fractals.IFractal;
 import ch.fhnw.comgr.fractal.ui.BooleanWidget;
 import ch.fhnw.comgr.fractal.ui.SmallSlider;
 import ch.fhnw.comgr.fractal.ui.TextWidget;
-import ch.fhnw.comgr.fractal.util.MergeGeometry;
-import ch.fhnw.comgr.fractal.util.TransformableGeometry;
 import ch.fhnw.comgr.fractal.util.UpdateType;
+import ch.fhnw.ether.controller.event.IKeyEvent;
+import ch.fhnw.ether.controller.event.IPointerEvent;
+import ch.fhnw.ether.controller.tool.ITool;
 import ch.fhnw.ether.scene.IScene;
+import ch.fhnw.ether.scene.light.DirectionalLight;
 import ch.fhnw.ether.scene.light.ILight;
 import ch.fhnw.ether.scene.light.PointLight;
+import ch.fhnw.ether.scene.light.SpotLight;
 import ch.fhnw.ether.scene.mesh.DefaultMesh;
 import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.ether.scene.mesh.MeshUtilities;
 import ch.fhnw.ether.scene.mesh.geometry.DefaultGeometry;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
+import ch.fhnw.ether.scene.mesh.material.ColorMaterial;
 import ch.fhnw.ether.scene.mesh.material.ShadedMaterial;
 import ch.fhnw.ether.ui.IWidget;
+import ch.fhnw.ether.view.IView;
 import ch.fhnw.util.color.RGB;
+import ch.fhnw.util.color.RGBA;
 import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
-import ch.fhnw.util.math.Vec4;
+import ch.fhnw.util.math.geometry.GeometryUtilities;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -43,6 +49,7 @@ public class SimpleTree2 implements IFractal {
 
     private IGeometry geometry;
     private List<IMesh>[] trees;
+    private int[] vCount;
 
     private IScene scene;
     private ILight light = new PointLight(new Vec3(0, 0, 2), RGB.BLACK, RGB.WHITE, 10); //new DirectionalLight(Vec3.Z, RGB.BLACK, RGB.WHITE);
@@ -54,6 +61,9 @@ public class SimpleTree2 implements IFractal {
     private TextWidget verticesCount;
     private TextWidget trianglesCount;
     private boolean lightState = true;
+    private IMesh lightMesh;
+
+    private float[] vec4s;
 
     public SimpleTree2(float length, float width, float height, float alpha, IScene scene) {
         this.length = length;
@@ -65,59 +75,37 @@ public class SimpleTree2 implements IFractal {
 
         float w = width * 0.5f;
         float h = height * 0.5f;
-        float[] vec4s = {
+        vec4s = new float[]{
                 // bottom
-                -w, -h, -length, -w, h, -length,w, h, -length,
-                -w, -h, -length,w, h, -length,w, -h, -length,
+                -w, -h, -length, -w, h, -length, w, h, -length,
+                -w, -h, -length, w, h, -length, w, -h, -length,
 
                 // top
-                w, -h, 0,w, h, 0,-w, h, 0,
-                        w, -h, 0,-w, h, 0,-w, -h, 0,
+                w, -h, 0, w, h, 0, -w, h, 0,
+                w, -h, 0, -w, h, 0, -w, -h, 0,
 
                 // front
-                -w, -h, -length,w, -h, -length,w, -h, 0,
-                        -w, -h, -length,w, -h, 0,-w, -h, 0,
+                -w, -h, -length, w, -h, -length, w, -h, 0,
+                -w, -h, -length, w, -h, 0, -w, -h, 0,
 
                 // back
-                w, h, -length,-w, h, -length,-w, h, 0,
-                w, h, -length,-w, h, 0,w, h, 0,
+                w, h, -length, -w, h, -length, -w, h, 0,
+                w, h, -length, -w, h, 0, w, h, 0,
 
                 // left
-                -w, h, -length,-w, -h, -length,-w, -h, 0,
-                -w, h, -length,-w, -h, 0,-w, h, 0,
+                -w, h, -length, -w, -h, -length, -w, -h, 0,
+                -w, h, -length, -w, -h, 0, -w, h, 0,
 
                 // right
-                w, -h, -length,w, h, -length,w, h, 0,
-                w, -h, -length,w, h, 0,w, -h, 0
+                w, -h, -length, w, h, -length, w, h, 0,
+                w, -h, -length, w, h, 0, w, -h, 0
         };
-
-        float[] normals = {
-                // bottom
-               0, 0, -1,0, 0, -1,0, 0, -1,
-                0, 0, -1,0, 0, -1,0, 0, -1,
-                //top
-                0, 0, 1,0, 0, 1, 0, 0,1,
-                0, 0, 0, 1,0,1, 0, 0,1,
-                //front
-                0, -1, 0,0, -1, 0,0, -1, 0,
-                0, -1, 0,0, -1, 0,0, -1, 0,
-                //back
-                0, 1, 0,0, 1, 0,0, 1, 0,
-                0, 1, 0,0, 1, 0,0, 1, 0,
-                //left
-                -1, 0, 0,-1, 0, 0,-1, 0, 0,
-                -1, 0, 0,-1, 0, 0,-1, 0, 0,
-                //right
-                1, 0, 0,1, 0, 0,1, 0, 0,
-                1, 0, 0,1, 0, 0,1, 0, 0
-        };
-        this.geometry = DefaultGeometry.createVN(IGeometry.Primitive.TRIANGLES, vec4s, normals);
+        this.geometry = DefaultGeometry.createVN(IGeometry.Primitive.TRIANGLES, vec4s, GeometryUtilities.calculateNormals(vec4s));
 
         createWidgets();
 
         init();
-        trianglesCount.setContent(String.format("%,d", getTrianglesCount()));
-        verticesCount.setContent(String.format("%,d", getVerticesCount()));
+
     }
 
     private void createWidgets() {
@@ -130,9 +118,11 @@ public class SimpleTree2 implements IFractal {
     }
 
     private void createObjects() {
+        meshes.clear();
         if (trees[depth - 1] == null) {
             recursiveFract(1, 0, Vec3.Y, Mat4.ID);
             System.out.println("Fractal Calculated");
+            vCount[depth - 1] = meshes.size() * (vec4s.length / 3);
             trees[depth - 1] = MeshUtilities.mergeMeshes(meshes);
         }
         System.out.println("Mesh Generated");
@@ -157,7 +147,7 @@ public class SimpleTree2 implements IFractal {
 
         transform = Mat4.multiply(transform, Mat4.rotate(alpha, rot), Mat4.translate(0, 0, length / level));
 
-        IMesh mesh = new DefaultMesh(new ShadedMaterial(RGB.BLACK, RGB.BLUE, RGB.GRAY, RGB.WHITE, 10, 1, 1f), geometry);
+        IMesh mesh = new DefaultMesh(new ShadedMaterial(RGB.GREEN, RGB.BLUE, RGB.RED, RGB.WHITE, 10, 1, 1f), geometry);
         mesh.setTransform(Mat4.multiply(transform, Mat4.scale(1.0f / level)));
         meshes.add(mesh);
 
@@ -170,7 +160,23 @@ public class SimpleTree2 implements IFractal {
     @Override
     public void init() {
         trees = new ArrayList[maxDepth];
+        vCount = new int[maxDepth];
+
+        // Add a ground plane
+        IMesh ground = MeshUtilities.createGroundPlane();
+        scene.add3DObject(ground);
+
+        lightMesh = new DefaultMesh(new ColorMaterial(RGBA.YELLOW), DefaultGeometry.createV(IGeometry.Primitive.TRIANGLES, vec4s), IMesh.Flag.DONT_CAST_SHADOW);
+        lightMesh.setTransform(Mat4.trs(0, 0, 0, 0, 0, 0, 0.1f, 0.1f, 0.1f));
+        lightMesh.setPosition(new Vec3(0, 0, 2));
+        light.setPosition(lightMesh.getPosition());
+
+        scene.add3DObject(lightMesh);
+
         createObjects();
+
+        trianglesCount.setContent(String.format("%,d", getTrianglesCount()));
+        verticesCount.setContent(String.format("%,d", getVerticesCount()));
     }
 
     @Override
@@ -181,18 +187,20 @@ public class SimpleTree2 implements IFractal {
     @Override
     public void cleanup() {
         scene.remove3DObjects(msh);
+        scene.remove3DObject(light);
+        scene.remove3DObject(lightMesh);
         msh = null;
         trees = null;
     }
 
     @Override
     public int getVerticesCount() {
-        return 0;
+       return vCount[depth-1];
     }
 
     @Override
     public int getTrianglesCount() {
-        return 0;
+        return getVerticesCount()/3;
     }
 
     @Override
@@ -234,5 +242,90 @@ public class SimpleTree2 implements IFractal {
                 break;
         }
         listeners.forEach(l -> l.notifyUpdate(this, t));
+    }
+
+    @Override
+    public ITool getTool() {
+        return new ITool() {
+            @Override
+            public void activate() {
+
+            }
+
+            @Override
+            public void deactivate() {
+
+            }
+
+            @Override
+            public void refresh(IView view) {
+
+            }
+
+            @Override
+            public void keyPressed(IKeyEvent e) {
+                switch (e.getKeyCode()) {
+                    case IKeyEvent.VK_1:
+                        scene.remove3DObject(light);
+                        light = new DirectionalLight(light.getPosition(), RGB.BLACK, RGB.WHITE);
+                        scene.add3DObject(light);
+                        break;
+                    case IKeyEvent.VK_2:
+                        scene.remove3DObject(light);
+                        light = new PointLight(light.getPosition(), RGB.BLACK, RGB.WHITE, 10);
+                        scene.add3DObject(light);
+                        break;
+                    case IKeyEvent.VK_3:
+                        scene.remove3DObject(light);
+                        light = new SpotLight(light.getPosition(), RGB.BLACK, RGB.WHITE, 10, Vec3.Z_NEG, 15, 0);
+                        scene.add3DObject(light);
+                        break;
+                    case IKeyEvent.VK_UP:
+                        lightMesh.setPosition(lightMesh.getPosition().add(Vec3.Y.scale(0.25f)));
+                        break;
+                    case IKeyEvent.VK_DOWN:
+                        lightMesh.setPosition(lightMesh.getPosition().add(Vec3.Y_NEG.scale(0.25f)));
+                        break;
+                    case IKeyEvent.VK_LEFT:
+                        lightMesh.setPosition(lightMesh.getPosition().add(Vec3.X_NEG.scale(0.25f)));
+                        break;
+                    case IKeyEvent.VK_RIGHT:
+                        lightMesh.setPosition(lightMesh.getPosition().add(Vec3.X.scale(0.25f)));
+                        break;
+                    case IKeyEvent.VK_Q:
+                        lightMesh.setPosition(lightMesh.getPosition().add(Vec3.Z.scale(0.25f)));
+                        break;
+                    case IKeyEvent.VK_A:
+                        lightMesh.setPosition(lightMesh.getPosition().add(Vec3.Z_NEG.scale(0.25f)));
+                        break;
+                }
+                light.setPosition(lightMesh.getPosition());
+            }
+
+            @Override
+            public void pointerPressed(IPointerEvent e) {
+
+            }
+
+            @Override
+            public void pointerReleased(IPointerEvent e) {
+
+            }
+
+            @Override
+            public void pointerMoved(IPointerEvent e) {
+
+            }
+
+            @Override
+            public void pointerDragged(IPointerEvent e) {
+
+            }
+
+            @Override
+            public void pointerScrolled(IPointerEvent e) {
+
+            }
+        };
     }
 }

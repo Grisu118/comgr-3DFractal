@@ -1,6 +1,8 @@
 package ch.fhnw.comgr.fractal.fractals;
 
 import ch.fhnw.comgr.fractal.IUpdateListener;
+import ch.fhnw.ether.controller.tool.ITool;
+import ch.fhnw.ether.scene.camera.ICamera;
 import ch.fhnw.ether.scene.light.ILight;
 import ch.fhnw.ether.ui.IWidget;
 
@@ -36,5 +38,11 @@ public interface IFractal {
 
     boolean getLightState();
     ILight getLight();
+
+    default ITool getTool() {
+        return null;
+    }
+
+    default ICamera getCamera() { return  null; }
 
 }

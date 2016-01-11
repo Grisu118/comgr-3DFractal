@@ -5,6 +5,7 @@ import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
 import ch.fhnw.ether.scene.mesh.material.AbstractMaterial;
 import ch.fhnw.ether.scene.mesh.material.ICustomMaterial;
 import ch.fhnw.util.color.RGBA;
+import ch.fhnw.util.math.IVec3;
 import ch.fhnw.util.math.Vec3;
 
 import java.util.Arrays;
@@ -23,14 +24,33 @@ public class ShaderOnlyMaterial extends AbstractMaterial implements ICustomMater
     private Vec3 offset = Vec3.ZERO;
     private Vec3  shift = Vec3.ZERO;;
 
+    private Vec3 cameraPosition = new Vec3(0,0,-2.5);
+    private float cameraRoll = 0;
+
     public ShaderOnlyMaterial() {
-        super(material(new MaterialAttribute<Float>("mandelbulbO.scale"), new MaterialAttribute<Float>("mandelbulbO.power")), geometry(IGeometry.POSITION_ARRAY));
+        super(material(new MaterialAttribute<Float>("mandelbulbO.scale"), new MaterialAttribute<Float>("mandelbulbO.power"), new MaterialAttribute<IVec3>("mandelbulbO.cameraPosition"), new MaterialAttribute<Float>("mandelbulbO.cameraRoll")), geometry(IGeometry.POSITION_ARRAY));
         this.shader = new ShaderOnlyShader(getClass(), Arrays.asList(getProvidedAttributes()));
     }
 
     public void setScale(float scale) {
         this.scale = scale;
         updateRequest();
+    }
+
+    public void moveCamera(double dx, double dy, double dz) {
+        cameraPosition = new Vec3(cameraPosition.x + dx, cameraPosition.y + dy, cameraPosition.z + dz);
+        System.out.println(cameraPosition);
+        updateRequest();
+    }
+
+    public void setCameraRoll(float cameraRoll) {
+        this.cameraRoll = cameraRoll;
+        System.out.println(cameraRoll);
+        updateRequest();
+    }
+
+    public float getCameraRoll() {
+        return cameraRoll;
     }
 
     @Override
@@ -45,6 +65,6 @@ public class ShaderOnlyMaterial extends AbstractMaterial implements ICustomMater
 
     @Override
     public Object[] getData() {
-        return data(scale, power);
+        return data(scale, power, cameraPosition, cameraRoll);
     }
 }

@@ -82,7 +82,7 @@ public class MandelBulb implements IFractal, IEventScheduler.IAnimationAction{
 
     @Override
     public void cleanup() {
-
+        scene.remove3DObject(mesh);
     }
 
     @Override

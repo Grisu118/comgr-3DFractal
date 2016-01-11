@@ -89,32 +89,32 @@ public class SimpleTree implements IFractal {
                 new Vec4(w, -h, -length, 1), new Vec4(w, h, 0, 1), new Vec4(w, -h, 0, 1)
         };
 
-        Vec4[] normals = {
+        Vec3[] normals = {
                 // bottom
-                new Vec4(0, 0, -1, 0), new Vec4(0, 0, -1, 0), new Vec4(0, 0, -1, 0),
-                new Vec4(0, 0, -1, 0), new Vec4(0, 0, -1, 0), new Vec4(0, 0, -1, 0),
+                new Vec3(0, 0, -1), new Vec3(0, 0, -1), new Vec3(0, 0, -1),
+                new Vec3(0, 0, -1), new Vec3(0, 0, -1), new Vec3(0, 0, -1),
                 //top
-                new Vec4(0, 0, 1, 0), new Vec4(0, 0, 1), new Vec4(0, 0, 1, 0),
-                new Vec4(0, 0, 1, 0), new Vec4(0, 0, 1), new Vec4(0, 0, 1, 0),
+                new Vec3(0, 0, 1), new Vec3(0, 0, 1), new Vec3(0, 0, 1),
+                new Vec3(0, 0, 1), new Vec3(0, 0, 1), new Vec3(0, 0, 1),
                 //front
-                new Vec4(0, -1, 0, 0), new Vec4(0, -1, 0, 0), new Vec4(0, -1, 0, 0),
-                new Vec4(0, -1, 0, 0), new Vec4(0, -1, 0, 0), new Vec4(0, -1, 0, 0),
+                new Vec3(0, -1, 0), new Vec3(0, -1, 0), new Vec3(0, -1, 0),
+                new Vec3(0, -1, 0), new Vec3(0, -1, 0), new Vec3(0, -1, 0),
                 //back
-                new Vec4(0, 1, 0, 0), new Vec4(0, 1, 0, 0), new Vec4(0, 1, 0, 0),
-                new Vec4(0, 1, 0, 0), new Vec4(0, 1, 0, 0), new Vec4(0, 1, 0, 0),
+                new Vec3(0, 1, 0), new Vec3(0, 1, 0), new Vec3(0, 1, 0),
+                new Vec3(0, 1, 0), new Vec3(0, 1, 0), new Vec3(0, 1, 0),
                 //left
-                new Vec4(-1, 0, 0, 0), new Vec4(-1, 0, 0, 0), new Vec4(-1, 0, 0, 0),
-                new Vec4(-1, 0, 0, 0), new Vec4(-1, 0, 0, 0), new Vec4(-1, 0, 0, 0),
+                new Vec3(-1, 0, 0), new Vec3(-1, 0, 0), new Vec3(-1, 0, 0),
+                new Vec3(-1, 0, 0), new Vec3(-1, 0, 0), new Vec3(-1, 0, 0),
                 //right
-                new Vec4(1, 0, 0, 0), new Vec4(1, 0, 0, 0), new Vec4(1, 0, 0, 0),
-                new Vec4(1, 0, 0, 0), new Vec4(1, 0, 0, 0), new Vec4(1, 0, 0, 0)
+                new Vec3(1, 0, 0), new Vec3(1, 0, 0), new Vec3(1, 0, 0),
+                new Vec3(1, 0, 0), new Vec3(1, 0, 0), new Vec3(1, 0, 0)
         };
         this.geometry = new TransformableGeometry(vec4s, normals);
 
         createWidgets();
 
-        trianglesCount.setContent(String.format("%,d", getTrianglesCount()));
-        verticesCount.setContent(String.format("%,d", getVerticesCount()));
+
+
     }
 
     private void createWidgets() {
@@ -182,6 +182,9 @@ public class SimpleTree implements IFractal {
     public void init() {
         trees = new MergeGeometry[maxDepth];
         createObjects();
+
+        trianglesCount.setContent(String.format("%,d", getTrianglesCount()));
+        verticesCount.setContent(String.format("%,d", getVerticesCount()));
     }
 
     @Override

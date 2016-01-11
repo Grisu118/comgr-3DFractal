@@ -93,7 +93,7 @@ uniform float aoIntensity = 0.15;          // {"label":"AO intensity",     "min"
 uniform float aoSpread = 9;             // {"label":"AO spread",    "min":0, "max":20, "step":0.01, "default":9,  "group":"Shading"}
 
 uniform mat3  objectRotation = mat3(0.0);       // {"label":["Rotate x", "Rotate y", "Rotate z"], "group":"Fractal", "control":"rotation", "default":[0,0,0], "min":-360, "max":360, "step":1, "group_label":"Object rotation"}
-uniform mat3  fractalRotation1  = mat3(0.0);     // {"label":["Rotate x", "Rotate y", "Rotate z"], "group":"Fractal", "control":"rotation", "default":[0,0,0], "min":-360, "max":360, "step":1, "group_label":"Fractal rotation 1"}
+                                                                                                                                               uniform mat3  fractalRotation1  = mat3(0.0);     // {"label":["Rotate x", "Rotate y", "Rotate z"], "group":"Fractal", "control":"rotation", "default":[0,0,0], "min":-360, "max":360, "step":1, "group_label":"Fractal rotation 1"}
 uniform mat3  fractalRotation2 = mat3(0.0);     // {"label":["Rotate x", "Rotate y", "Rotate z"], "group":"Fractal", "control":"rotation", "default":[0,0,0], "min":-360, "max":360, "step":1, "group_label":"Fractal rotation 2"}
 uniform bool  depthMap = false;             // {"label":"Depth map", "default": false, "value":1, "group":"Shading"}
 

@@ -1,10 +1,17 @@
 package ch.fhnw.comgr.fractal;
 
+import ch.fhnw.comgr.fractal.fractals.FractalType;
 import ch.fhnw.comgr.fractal.fractals.IFractal;
 import ch.fhnw.comgr.fractal.fractals.mandel.MandelBulb;
+import ch.fhnw.comgr.fractal.fractals.shaderOnly.ShaderOnly;
+import ch.fhnw.comgr.fractal.fractals.simpleTree.SimpleTree;
+import ch.fhnw.comgr.fractal.fractals.simpleTree.SimpleTree2;
 import ch.fhnw.comgr.fractal.util.UpdateType;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.controller.IController;
+import ch.fhnw.ether.controller.event.IKeyEvent;
+import ch.fhnw.ether.controller.event.IPointerEvent;
+import ch.fhnw.ether.controller.tool.ITool;
 import ch.fhnw.ether.scene.DefaultScene;
 import ch.fhnw.ether.scene.IScene;
 import ch.fhnw.ether.scene.camera.Camera;
@@ -25,13 +32,16 @@ import java.util.Objects;
  */
 public final class FractalViewer implements IUpdateListener {
 
-    private List<IFractal> fractals = new ArrayList<>();
     private IFractal activeFractal;
     private final IController controller;
     private IScene scene;
 
-
     public FractalViewer() {
+        this(FractalType.MANDELBULB);
+    }
+
+
+    public FractalViewer(FractalType type) {
         controller = new DefaultController();
         controller.run((time) -> {
             // Create view
@@ -39,16 +49,33 @@ public final class FractalViewer implements IUpdateListener {
             // Create scene
             scene = new DefaultScene(controller);
             controller.setScene(scene);
+            switch (type) {
+                case SIMPLE_TREE:
+                    activeFractal = new SimpleTree2(0.5f, 0.05f,0.05f, 30, scene);
+                    break;
+                case MANDELBULB:
+                    activeFractal = new MandelBulb(scene);
+                    break;
+                case SHADER:
+                    activeFractal = new ShaderOnly(scene);
+                    break;
+                default:
+                    activeFractal = new MandelBulb(scene);
+            }
+
 
             // Create and add camera
-            ICamera camera = new Camera(new Vec3(0, -2, 2), Vec3.ZERO);
+            ICamera camera = activeFractal.getCamera() == null ? new Camera(new Vec3(0, -2, 2), Vec3.ZERO) : activeFractal.getCamera();
             scene.add3DObject(camera);
             controller.setCamera(view, camera);
 
 
-            activeFractal = new MandelBulb(scene);
+
             activeFractal.init();
             activeFractal.registerUpdateListener(this);
+            if (activeFractal.getTool() != null) {
+                controller.setCurrentTool(activeFractal.getTool());
+            }
 
             scene.add3DObject(activeFractal.getLight());
 
@@ -75,4 +102,5 @@ public final class FractalViewer implements IUpdateListener {
             }
         }
     }
+
 }

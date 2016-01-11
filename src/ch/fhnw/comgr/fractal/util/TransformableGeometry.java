@@ -1,6 +1,8 @@
 package ch.fhnw.comgr.fractal.util;
 
+import ch.fhnw.util.math.Mat3;
 import ch.fhnw.util.math.Mat4;
+import ch.fhnw.util.math.Vec3;
 import ch.fhnw.util.math.Vec4;
 
 /**
@@ -8,20 +10,20 @@ import ch.fhnw.util.math.Vec4;
  */
 public class TransformableGeometry {
     private final Vec4[] vertices;
-    private final Vec4[] normals;
+    private final Vec3[] normals;
 
-    public TransformableGeometry(Vec4[] vertices, Vec4[] normals) {
+    public TransformableGeometry(Vec4[] vertices, Vec3[] normals) {
         this.vertices = vertices;
         this.normals = normals;
     }
 
     public TransformableGeometry transform(Mat4 m) {
         Vec4[] r = new Vec4[vertices.length];
-        Vec4[] n = new Vec4[normals.length];
-        Mat4 m2 = m.inverse().transpose();
+        Vec3[] n = new Vec3[normals.length];
+        Mat3 m2 = new Mat3(m).inverse().transpose();
         for (int i = 0; i < vertices.length; i++) {
             r[i] = m.transform(vertices[i]);
-            n[i] = m2.transform(vertices[i]);
+            n[i] = m2.transform(normals[i]);
         }
         return new TransformableGeometry(r, n);
     }

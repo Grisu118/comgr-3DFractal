@@ -11,9 +11,13 @@ import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.controller.IController;
 import ch.fhnw.ether.controller.event.DefaultEventScheduler;
 import ch.fhnw.ether.controller.event.IEventScheduler;
+import ch.fhnw.ether.controller.event.IKeyEvent;
+import ch.fhnw.ether.controller.event.IPointerEvent;
+import ch.fhnw.ether.controller.tool.ITool;
 import ch.fhnw.ether.scene.DefaultScene;
 import ch.fhnw.ether.scene.IScene;
 import ch.fhnw.ether.scene.camera.Camera;
+import ch.fhnw.ether.scene.camera.ICamera;
 import ch.fhnw.ether.scene.light.ILight;
 import ch.fhnw.ether.scene.mesh.DefaultMesh;
 import ch.fhnw.ether.scene.mesh.IMesh;
@@ -52,6 +56,32 @@ public class ShaderOnly implements IFractal {
     private List<IWidget> widgets;
     private SmallSlider distanceSlider;
 
+    public static final float[] CUBE_TRIANGLES = {
+            // bottom
+            -500, -500, -500, -500, +500, -500, +500, +500, -500,
+            -500, -500, -500, +500, +500, -500, +500, -500, -500,
+
+            // top
+            +500, -500, +500, +500, +500, +500, -500, +500, +500,
+            +500, -500, +500, -500, +500, +500, -500, -500, +500,
+
+            // front
+            -500, -500, -500, +500, -500, -500, +500, -500, +500,
+            -500, -500, -500, +500, -500, +500, -500, -500, +500,
+
+            // back
+            +500, +500, -500, -500, +500, -500, -500, +500, +500,
+            +500, +500, -500, -500, +500, +500, +500, +500, +500,
+
+            // left
+            -500, +500, -500, -500, -500, -500, -500, -500, +500,
+            -500, +500, -500, -500, -500, +500, -500, +500, +500,
+
+            // right
+            +500, -500, -500, +500, +500, -500, +500, +500, +500,
+            +500, -500, -500, +500, +500, +500, +500, -500, +500
+    };
+
     public ShaderOnly(IScene _scene) {
         scene = _scene;
     }
@@ -59,8 +89,7 @@ public class ShaderOnly implements IFractal {
     @Override
     public void init() {
         mat = new ShaderOnlyMaterial();
-        mesh = MeshUtilities.createCube(mat);
-        mesh.setTransform(Mat4.scale(2));
+        mesh = new DefaultMesh(mat, DefaultGeometry.createVN(IGeometry.Primitive.TRIANGLES, CUBE_TRIANGLES, GeometryUtilities.calculateNormals(CUBE_TRIANGLES)));
         scene.add3DObject(mesh);
 
         widgets = new ArrayList<>();
@@ -104,5 +133,80 @@ public class ShaderOnly implements IFractal {
     @Override
     public ILight getLight() {
         return null;
+    }
+
+    @Override
+    public ITool getTool() {
+        return new ITool() {
+            @Override
+            public void activate() {
+
+            }
+
+            @Override
+            public void deactivate() {
+
+            }
+
+            @Override
+            public void refresh(IView view) {
+
+            }
+
+            @Override
+            public void keyPressed(IKeyEvent e) {
+                double delta = 0.1;
+                switch (e.getKeyCode()) {
+                    case IKeyEvent.VK_LEFT:
+                        mat.moveCamera(-delta, 0, 0);
+                        break;
+                    case IKeyEvent.VK_RIGHT:
+                        mat.moveCamera(delta, 0, 0);
+                        break;
+                    case IKeyEvent.VK_UP:
+                        mat.moveCamera(0, -delta, 0);
+                        break;
+                    case IKeyEvent.VK_DOWN:
+                        mat.moveCamera(0, delta, 0);
+                        break;
+                    case IKeyEvent.VK_E :
+                        mat.setCameraRoll((float) (mat.getCameraRoll() + delta*10));
+                        break;
+                    case IKeyEvent.VK_Q :
+                        mat.setCameraRoll((float) (mat.getCameraRoll() - delta*10));
+                        break;
+                }
+            }
+
+            @Override
+            public void pointerPressed(IPointerEvent e) {
+
+            }
+
+            @Override
+            public void pointerReleased(IPointerEvent e) {
+
+            }
+
+            @Override
+            public void pointerMoved(IPointerEvent e) {
+
+            }
+
+            @Override
+            public void pointerDragged(IPointerEvent e) {
+
+            }
+
+            @Override
+            public void pointerScrolled(IPointerEvent e) {
+
+            }
+        };
+    }
+
+    @Override
+    public ICamera getCamera() {
+        return new Camera(new Vec3(0, -1500, 0), Vec3.ZERO);
     }
 }
