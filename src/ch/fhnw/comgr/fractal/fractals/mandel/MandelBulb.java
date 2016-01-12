@@ -61,7 +61,6 @@ public class MandelBulb implements IFractal, IEventScheduler.IAnimationAction{
         distanceSlider = new SmallSlider(0,2,"max Distance", null, mat.getMaxDistance(), (w, v) -> mat.setMaxDistance(w.getValue(0.01f, 1f)));
         distanceSlider.setActivated(false);
         widgets.add(distanceSlider);
-        System.out.println(viewPort.w);
         iterations = new SmallSlider(0,6,"Iterations", null, 1f/15f*7, (w, v) -> {});
         order  = new SmallSlider(0,5,"Order", null, 1f/15f*5, (w, v) -> {});
         widgets.add(iterations);
