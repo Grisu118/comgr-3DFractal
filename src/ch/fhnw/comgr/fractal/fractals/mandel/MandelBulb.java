@@ -77,10 +77,10 @@ public class MandelBulb implements IFractal, IEventScheduler.IAnimationAction{
             generators.forEach(FractalGenerator::interrupt);
         }
         if (points != null) {
-            points.clear();
+            points = new Points();
         }
         generators.clear();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 6; i++) {
             generators.add(new FractalGenerator(points, i));
         }
 
