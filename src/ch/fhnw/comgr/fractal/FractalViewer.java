@@ -4,14 +4,10 @@ import ch.fhnw.comgr.fractal.fractals.FractalType;
 import ch.fhnw.comgr.fractal.fractals.IFractal;
 import ch.fhnw.comgr.fractal.fractals.mandel.MandelBulb;
 import ch.fhnw.comgr.fractal.fractals.shaderOnly.ShaderOnly;
-import ch.fhnw.comgr.fractal.fractals.simpleTree.SimpleTree;
 import ch.fhnw.comgr.fractal.fractals.simpleTree.SimpleTree2;
 import ch.fhnw.comgr.fractal.util.UpdateType;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.controller.IController;
-import ch.fhnw.ether.controller.event.IKeyEvent;
-import ch.fhnw.ether.controller.event.IPointerEvent;
-import ch.fhnw.ether.controller.tool.ITool;
 import ch.fhnw.ether.scene.DefaultScene;
 import ch.fhnw.ether.scene.IScene;
 import ch.fhnw.ether.scene.camera.Camera;
@@ -22,8 +18,6 @@ import ch.fhnw.ether.view.gl.DefaultView;
 import ch.fhnw.util.math.Vec3;
 
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**

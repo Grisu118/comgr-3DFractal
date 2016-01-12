@@ -3,10 +3,8 @@ package ch.fhnw.comgr.fractal.ui;
 import ch.fhnw.ether.controller.event.IPointerEvent;
 import ch.fhnw.ether.ui.AbstractWidget;
 import ch.fhnw.ether.ui.GraphicsPlane;
-import ch.fhnw.ether.ui.IWidget;
 import ch.fhnw.ether.ui.UI;
 import ch.fhnw.ether.view.IView;
-import ch.fhnw.util.math.MathUtilities;
 
 import java.awt.*;
 

@@ -1,7 +1,6 @@
 package ch.fhnw.comgr.fractal.fractals.mandel;
 
 import ch.fhnw.ether.render.shader.IShader;
-import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
 import ch.fhnw.ether.scene.mesh.material.AbstractMaterial;
 import ch.fhnw.ether.scene.mesh.material.ICustomMaterial;

@@ -16,7 +16,6 @@ import ch.fhnw.ether.scene.mesh.DefaultMesh;
 import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.ether.scene.mesh.geometry.DefaultGeometry;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
-import ch.fhnw.ether.ui.Button;
 import ch.fhnw.ether.ui.IWidget;
 import ch.fhnw.util.Viewport;
 import ch.fhnw.util.color.RGBA;

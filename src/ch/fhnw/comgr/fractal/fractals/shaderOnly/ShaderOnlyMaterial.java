@@ -4,7 +4,6 @@ import ch.fhnw.ether.render.shader.IShader;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
 import ch.fhnw.ether.scene.mesh.material.AbstractMaterial;
 import ch.fhnw.ether.scene.mesh.material.ICustomMaterial;
-import ch.fhnw.util.color.RGBA;
 import ch.fhnw.util.math.IVec3;
 import ch.fhnw.util.math.Vec3;
 
