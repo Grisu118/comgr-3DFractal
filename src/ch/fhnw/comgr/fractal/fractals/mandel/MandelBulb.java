@@ -4,38 +4,24 @@ import ch.fhnw.comgr.fractal.IUpdateListener;
 import ch.fhnw.comgr.fractal.fractals.FractalGenerator;
 import ch.fhnw.comgr.fractal.fractals.IFractal;
 import ch.fhnw.comgr.fractal.ui.BooleanWidget;
+import ch.fhnw.comgr.fractal.ui.SmallButton;
 import ch.fhnw.comgr.fractal.ui.SmallSlider;
 import ch.fhnw.comgr.fractal.util.Points;
 import ch.fhnw.ether.controller.DefaultController;
-import ch.fhnw.ether.controller.IController;
-import ch.fhnw.ether.controller.event.DefaultEventScheduler;
 import ch.fhnw.ether.controller.event.IEventScheduler;
-import ch.fhnw.ether.scene.DefaultScene;
+import ch.fhnw.ether.controller.event.IKeyEvent;
 import ch.fhnw.ether.scene.IScene;
-import ch.fhnw.ether.scene.camera.Camera;
 import ch.fhnw.ether.scene.light.ILight;
 import ch.fhnw.ether.scene.mesh.DefaultMesh;
 import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.ether.scene.mesh.geometry.DefaultGeometry;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
-import ch.fhnw.ether.scene.mesh.material.ColorMaterial;
-import ch.fhnw.ether.scene.mesh.material.IMaterial;
-import ch.fhnw.ether.scene.mesh.material.PointMaterial;
-import ch.fhnw.ether.scene.mesh.material.ShadedMaterial;
 import ch.fhnw.ether.ui.Button;
 import ch.fhnw.ether.ui.IWidget;
-import ch.fhnw.ether.view.IView;
-import ch.fhnw.ether.view.gl.DefaultView;
-import ch.fhnw.util.color.RGB;
+import ch.fhnw.util.Viewport;
 import ch.fhnw.util.color.RGBA;
-import ch.fhnw.util.math.Mat4;
-import ch.fhnw.util.math.MathUtilities;
-import ch.fhnw.util.math.Vec3;
-import ch.fhnw.util.math.geometry.GeodesicSphere;
 
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -43,24 +29,27 @@ import java.util.List;
  */
 public class MandelBulb implements IFractal, IEventScheduler.IAnimationAction{
 
-    FractalGenerator generator;
+    List<FractalGenerator> generators;
     DefaultController controller = new DefaultController(30);
     Points points = new Points();
     IGeometry geometry;
     MandelBulbMaterial mat;
     IMesh mesh;
     IScene scene;
+    Viewport viewPort;
     private List<IWidget> widgets;
     private SmallSlider distanceSlider;
+    private SmallSlider iterations;
+    private SmallSlider order;
 
-    public MandelBulb(IScene _scene) {
+    public MandelBulb(IScene _scene, Viewport viewPort) {
         scene = _scene;
+        this.viewPort = viewPort;
     }
 
     @Override
     public void init() {
-        generator = new FractalGenerator(points);
-        generator.start();
+        generators = new ArrayList<>();
         geometry = DefaultGeometry.createV(IGeometry.Primitive.POINTS, new float[0]);
         mat = new MandelBulbMaterial(RGBA.GRAY, 4f);
         mesh = new DefaultMesh(mat, geometry);
@@ -69,10 +58,38 @@ public class MandelBulb implements IFractal, IEventScheduler.IAnimationAction{
         controller.animate(this);
 
         widgets = new ArrayList<>();
-        widgets.add(new BooleanWidget(0, 5, "Color", "On", "Off", "Turn on/off Color", false, (w, v) -> {mat.setColorized(w.getValue()); distanceSlider.setActivated(w.getValue());}));
-        distanceSlider = new SmallSlider(0,4,"max Distance", null, mat.getMaxDistance(), (w, v) -> mat.setMaxDistance(w.getValue(0.01f, 1f)));
+        widgets.add(new BooleanWidget(0, 3, "Color", "On", "Off", "Turn on/off Color", false, (w, v) -> {mat.setColorized(w.getValue()); distanceSlider.setActivated(w.getValue());}));
+        distanceSlider = new SmallSlider(0,2,"max Distance", null, mat.getMaxDistance(), (w, v) -> mat.setMaxDistance(w.getValue(0.01f, 1f)));
         distanceSlider.setActivated(false);
         widgets.add(distanceSlider);
+        System.out.println(viewPort.w);
+        iterations = new SmallSlider(0,6,"Iterations", null, 1f/15f*7, (w, v) -> {});
+        order  = new SmallSlider(0,5,"Order", null, 1f/15f*5, (w, v) -> {});
+        widgets.add(iterations);
+        widgets.add(order);
+        SmallButton generate = new SmallButton(0,4,"Generate", "Generates the new Fractal", IKeyEvent.VK_G, (b, v) -> {
+            generate();
+        });
+        widgets.add(generate);
+    }
+
+    private void generate() {
+        if (!generators.isEmpty()) {
+            generators.forEach(FractalGenerator::interrupt);
+        }
+        if (points != null) {
+            points.clear();
+        }
+        generators.clear();
+        for (int i = 0; i < 3; i++) {
+            generators.add(new FractalGenerator(points, i));
+        }
+
+        for (FractalGenerator generator : generators) {
+            generator.setMaxIterations(iterations.getValue(3, 15));
+            generator.setOrder(order.getValue(2, 15));
+            generator.start();
+        }
     }
 
     @Override

@@ -39,4 +39,9 @@ public class Points {
         return points.isEmpty();
     }
 
+    public void clear() {
+        points.clear();
+        size.clear();
+    }
+
 }

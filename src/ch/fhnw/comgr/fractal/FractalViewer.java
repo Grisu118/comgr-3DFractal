@@ -54,15 +54,14 @@ public final class FractalViewer implements IUpdateListener {
                     activeFractal = new SimpleTree2(0.5f, 0.05f,0.05f, 30, scene);
                     break;
                 case MANDELBULB:
-                    activeFractal = new MandelBulb(scene);
+                    activeFractal = new MandelBulb(scene, view.getViewport());
                     break;
                 case SHADER:
                     activeFractal = new ShaderOnly(scene);
                     break;
                 default:
-                    activeFractal = new MandelBulb(scene);
+                    activeFractal = new MandelBulb(scene, view.getViewport());
             }
-
 
             // Create and add camera
             ICamera camera = activeFractal.getCamera() == null ? new Camera(new Vec3(0, -2, 2), Vec3.ZERO) : activeFractal.getCamera();

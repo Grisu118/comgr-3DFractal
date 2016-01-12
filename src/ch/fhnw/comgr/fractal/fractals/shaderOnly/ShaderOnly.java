@@ -169,6 +169,12 @@ public class ShaderOnly implements IFractal {
                     case IKeyEvent.VK_DOWN:
                         mat.moveCamera(0, delta, 0);
                         break;
+                    case IKeyEvent.VK_PAGE_UP:
+                        mat.moveCamera(0, 0, delta);
+                        break;
+                    case IKeyEvent.VK_PAGE_DOWN:
+                        mat.moveCamera(0, 0, -delta);
+                        break;
                     case IKeyEvent.VK_E :
                         mat.setCameraRoll((float) (mat.getCameraRoll() + delta*10));
                         break;
