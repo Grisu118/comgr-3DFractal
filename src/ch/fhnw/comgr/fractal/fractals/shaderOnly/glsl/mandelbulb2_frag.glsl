@@ -1,7 +1,8 @@
 #version 330
 
 uniform vec3 outputSize = vec3(500, 500, 0);
-uniform float power = 10;
+uniform float time = 12;
+uniform float power;
 
 uniform vec3 cameraPosition = vec3(0,0,8.5);
 
@@ -14,44 +15,26 @@ uniform vec3 color5 = vec3(0.05,0.06,0.18);
 uniform int iterations;
 
 float surfacefunction(vec3 hitpoint) {
-    vec3 z = hitpoint;
-    vec3 c = vec3(sin(power/15.0)*0.66,sin(power/15.0)*0.1,sin(power/15.0));
+    vec3 z = vec3(0);
     float r = 0.0;
-    for (int count=0; count<iterations; count+=1) {
+    for (int count=0; count<6; count+=1) {
         vec3 z2 = z*z;
         r = sqrt(dot(z,z));
         if (r>2.0) {
             break;
         }
-        float planeXY = sqrt(z2.x+z2.y)+0.0000001;
-        r += 0.0000001;
-        float sinPhi = z.y/planeXY;
-        float cosPhi = z.x/planeXY;
-        float sinThe = planeXY/r;
-        float cosThe = z.z/r;
+        float order = power;
 
+        float theta = atan(sqrt(z2.x + z2.y), z.z);
+        float phi = atan(z.y, z.x);
+        float powr = pow(r, order);
 
-        //level 1
-        sinPhi = 2.0*sinPhi*cosPhi;
-        cosPhi = 2.0*cosPhi*cosPhi-1.0;
-        sinThe = 2.0*sinThe*cosThe;
-        cosThe = 2.0*cosThe*cosThe-1.0;
-        //level 2.
-        sinPhi = 2.0*sinPhi*cosPhi;
-        cosPhi = 2.0*cosPhi*cosPhi-1.0;
-        sinThe = 2.0*sinThe*cosThe;
-        cosThe = 2.0*cosThe*cosThe-1.0;
-        //level 3.
-        sinPhi = 2.0*sinPhi*cosPhi;
-        cosPhi = 2.0*cosPhi*cosPhi-1.0;
-        sinThe = 2.0*sinThe*cosThe;
-        cosThe = 2.0*cosThe*cosThe-1.0;
-        float rPow = pow(r, 8.0);
-        z.x = sinThe*cosPhi;
-        z.y = sinThe*sinPhi;
-        z.z = cosThe;
-        z *= rPow;
-        z += c;
+        float sinThetaOrder = sin(theta * order);
+        z.x = (powr * sinThetaOrder * cos(phi * order));
+        z.y = (powr * sinThetaOrder * sin(phi * order));
+        z.z = (powr * cos(theta * order));
+
+        z += hitpoint;
     }
     return r - 2.0;
 }
@@ -87,21 +70,21 @@ void main(void) {
     //a workaround using vec4 constructors wich works on
     //both NVIDIA+ATI --- MAGIC. DO NOT TOUCH! -=#:-)
     float rubberfactor = 0.0025;
-    float phi = 0.50*(power+(gl_FragCoord.y*rubberfactor));
+    float phi = 0.50*(time+(gl_FragCoord.y*rubberfactor));
     mat4 xrot = mat4(
         vec4(1.0,       0.0,      0.0, 0.0),
         vec4(0.0,  cos(phi), sin(phi), 0.0),
         vec4(0.0, -sin(phi), cos(phi), 0.0),
         vec4(0.0,       0.0,      0.0, 1.0)
     );
-    float theta = 0.75*(power+(gl_FragCoord.y*rubberfactor));
+    float theta = 0.75*(time+(gl_FragCoord.y*rubberfactor));
     mat4 yrot = mat4(
         vec4(cos(theta), 0.0, -sin(theta), 0.0),
         vec4(       0.0, 1.0,         0.0, 0.0),
         vec4(sin(theta), 0.0,  cos(theta), 0.0),
         vec4(       0.0, 0.0,         0.0, 1.0)
     );
-    float psi = 0.15*(power+(gl_FragCoord.y*rubberfactor));
+    float psi = 0.15*(time+(gl_FragCoord.y*rubberfactor));
     mat4 zrot = mat4(
         vec4( cos (psi), sin (psi), 0.0, 0.0),
         vec4(-sin (psi), cos (psi), 0.0, 0.0),
