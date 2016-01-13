@@ -7,7 +7,7 @@ import ch.fhnw.comgr.fractal.ui.BooleanWidget;
 import ch.fhnw.comgr.fractal.ui.SmallButton;
 import ch.fhnw.comgr.fractal.ui.SmallSlider;
 import ch.fhnw.comgr.fractal.util.Points;
-import ch.fhnw.ether.controller.DefaultController;
+import ch.fhnw.ether.controller.FractalController;
 import ch.fhnw.ether.controller.event.IEventScheduler;
 import ch.fhnw.ether.controller.event.IKeyEvent;
 import ch.fhnw.ether.scene.IScene;
@@ -29,7 +29,7 @@ import java.util.List;
 public class MandelBulb implements IFractal, IEventScheduler.IAnimationAction{
 
     List<FractalGenerator> generators;
-    DefaultController controller = new DefaultController(30);
+    FractalController controller = new FractalController(30);
     Points points = new Points();
     IGeometry geometry;
     MandelBulbMaterial mat;

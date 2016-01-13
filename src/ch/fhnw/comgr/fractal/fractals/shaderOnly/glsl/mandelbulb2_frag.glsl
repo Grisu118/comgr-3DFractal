@@ -35,12 +35,14 @@
  ** A Simple and Flexible Volume Rendering Framework for Graphics-Hardware-based Raycasting: http://www.vis.uni-stuttgart.de/ger/research/fields/current/spvolren/
  **/
 
- #version 330
+#version 330
 
 uniform vec3 outputSize = vec3(500, 500, 0);
-uniform float time = 10;
+uniform float power = 10;
 
 uniform vec3 cameraPosition = vec3(0,0,8.5);
+
+float time = power;
 
 float surfacefunction(vec3 hitpoint) {
     vec3 z = hitpoint;
@@ -84,7 +86,6 @@ float surfacefunction(vec3 hitpoint) {
 }
 
 void main(void) {
-    //hardcode everything X-)
     int numlights = 5;
     vec3 lightsposition[5];
     lightsposition[0] = vec3( 2.0,-2.0,-2.0);
@@ -93,11 +94,11 @@ void main(void) {
     lightsposition[3] = vec3(-2.0,-2.0,-2.0);
     lightsposition[4] = vec3( 2.0, 2.0,-2.0);
     vec3 lightsdiffuse[5];
-    lightsdiffuse[0] = vec3(0.8,0.8,0.8);
-    lightsdiffuse[1] = vec3(0,0,1);
-    lightsdiffuse[2] = vec3(0,0,1);
-    lightsdiffuse[3] = vec3(1,0,0);
-    lightsdiffuse[4] = vec3(1,1,0);
+    lightsdiffuse[0] = vec3(0.4, 0.82, 0.91);
+    lightsdiffuse[1] = vec3(0,0.31,1);
+    lightsdiffuse[2] = vec3(0.15,0.12,0.49);
+    lightsdiffuse[3] = vec3(0.44,0.12,0.76);
+    lightsdiffuse[4] = vec3(0.05,0.06,0.18);
 
     const vec3 materialdiffuse = vec3(1.0, 1.0, 1.0);
     const float materialspecularexponent = 256.0;
@@ -135,27 +136,14 @@ void main(void) {
         vec4(-sin (psi), cos (psi), 0.0, 0.0),
         vec4(       0.0,       0.0, 1.0, 0.0),
         vec4(       0.0,       0.0, 0.0, 1.0)        
-    );    
-    /*
-    float xtrans = 0.0;
-    float ytrans = 0.0;
-    float ztrans = 3.0;
-    mat4 trans = mat4(
-        vec4(   1.0,    0.0,    0.0, 0.0),
-        vec4(   0.0,    1.0,    0.0, 0.0),
-        vec4(   0.0,    0.0,    1.0, 0.0),
-        vec4(xtrans, ytrans, ztrans, 1.0)
     );
-    */
 
     vec3 camera = vec3(yrot*xrot*zrot*vec4(cameraPosition,1.0));
     target = vec3(yrot*xrot*zrot*vec4(target,1.0));
 
     vec3 ray = normalize(target-camera);
     //config raymarching bound parameters
-    //const float baseaccuracy = 0.1;
     const float baseaccuracy = 0.01;
-    //const float baseaccuracy = 0.001; //Madness? THIS IS SPARTA!
     const float marchingstepsize = baseaccuracy;
     const float marchingaccuracy = baseaccuracy/100.0;
     const float marchingmaxraylength = 10.0;
@@ -209,7 +197,7 @@ void main(void) {
         }
         currentpos += currentstep;
     }
-    //no intersection found X-(
+    //no intersection found
     gl_FragColor = vec4(0.0,0.0,0.0,1.0);
     return;
 }

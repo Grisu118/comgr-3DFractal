@@ -50,6 +50,11 @@ public class ShaderOnlyMaterial extends AbstractMaterial implements ICustomMater
         updateRequest();
     }
 
+    public void setPower(float power) {
+        this.power = power;
+        updateRequest();
+    }
+
     public void setOutputSize(Vec3 outputSize) {
         this.outputSize = outputSize;
         updateRequest();

@@ -43,6 +43,7 @@ public class ShaderOnly implements IFractal {
             0, 0, 1, 0, 0, 1,
             1, 0, 0, 1, 1, 1
     };
+    private SmallSlider order;
 
     public ShaderOnly(IScene _scene) {
         scene = _scene;
@@ -55,6 +56,10 @@ public class ShaderOnly implements IFractal {
         scene.add3DObject(mesh);
 
         widgets = new ArrayList<>();
+
+        order  = new SmallSlider(0,5,"Order", null, 1f/25f*7, (w, v) -> mat.setPower(w.getValue(1, 25)));
+        order.setRange(1, 25);
+        widgets.add(order);
     }
 
     @Override
