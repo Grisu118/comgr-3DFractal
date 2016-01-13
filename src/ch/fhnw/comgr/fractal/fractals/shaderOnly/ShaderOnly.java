@@ -87,12 +87,13 @@ public class ShaderOnly implements IFractal {
 
         widgets = new ArrayList<>();
 
-        order = new SmallSlider(0, 5, "Order", null, 1f / 25f * 7, (w, v) -> mat.setPower(w.getValue(1, 25)));
+        order = new SmallSlider(0, 4, "Order", null, 1f / 25f * 7, (w, v) -> mat.setPower(w.getValue(1, 25)));
         order.setRange(1, 25);
         widgets.add(order);
-        SmallSlider color = new SmallSlider(0, 4, "Color", null, 0, (w, v) -> mat.setColor(colors[w.getValue(0, 3)]));
+        SmallSlider color = new SmallSlider(0, 3, "Color", null, 0, (w, v) -> mat.setColor(colors[w.getValue(0, 3)]));
         color.setRange(0, 3);
-        BooleanWidget iter = new BooleanWidget(0,3, "Smooth", "On", "Off", "Smooth", false, (w, v) -> mat.setIterations(w.getValue() ? 3 : 4));
+        SmallSlider iter = new SmallSlider(0,5, "Iterations", null, 1f/15f * 5, (w, v) -> mat.setIterations(w.getValue(2,15)));
+        iter.setRange(2, 15);
 
         widgets.add(color);
         widgets.add(iter);
@@ -177,6 +178,24 @@ public class ShaderOnly implements IFractal {
                         break;
                     case IKeyEvent.VK_PAGE_DOWN:
                         mat.moveCamera(0, 0, -delta);
+                        break;
+                    case IKeyEvent.VK_Q:
+                        mat.updateAngle(0.1f, 0, 0);
+                        break;
+                    case IKeyEvent.VK_E:
+                        mat.updateAngle(-0.1f, 0, 0);
+                        break;
+                    case IKeyEvent.VK_W:
+                        mat.updateAngle(0, 0.1f, 0);
+                        break;
+                    case IKeyEvent.VK_S:
+                        mat.updateAngle(0, -0.1f, 0);
+                        break;
+                    case IKeyEvent.VK_A:
+                        mat.updateAngle(0, 0, 0.1f);
+                        break;
+                    case IKeyEvent.VK_D:
+                        mat.updateAngle(0, 0, -0.1f);
                         break;
                 }
             }

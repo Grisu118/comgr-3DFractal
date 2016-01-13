@@ -14,6 +14,10 @@ uniform vec3 color5 = vec3(0.05,0.06,0.18);
 
 uniform int iterations = 6;
 
+uniform float phi;
+uniform float theta;
+uniform float psi;
+
 float surfacefunction(vec3 hitpoint) {
     vec3 z = vec3(0);
     float r = 0.0;
@@ -69,22 +73,22 @@ void main(void) {
     //currently broken (2010-09-21) on ATI cards i found
     //a workaround using vec4 constructors wich works on
     //both NVIDIA+ATI --- MAGIC. DO NOT TOUCH! -=#:-)
-    float rubberfactor = 0.0025;
-    float phi = 0.50*(time+(gl_FragCoord.y*rubberfactor));
+    //float rubberfactor = 0.0025;
+    //float phi = 0.50*(time+(gl_FragCoord.y*rubberfactor));
     mat4 xrot = mat4(
         vec4(1.0,       0.0,      0.0, 0.0),
         vec4(0.0,  cos(phi), sin(phi), 0.0),
         vec4(0.0, -sin(phi), cos(phi), 0.0),
         vec4(0.0,       0.0,      0.0, 1.0)
     );
-    float theta = 0.75*(time+(gl_FragCoord.y*rubberfactor));
+    //float theta = 0.75*(time+(gl_FragCoord.y*rubberfactor));
     mat4 yrot = mat4(
         vec4(cos(theta), 0.0, -sin(theta), 0.0),
         vec4(       0.0, 1.0,         0.0, 0.0),
         vec4(sin(theta), 0.0,  cos(theta), 0.0),
         vec4(       0.0, 0.0,         0.0, 1.0)
     );
-    float psi = 0.15*(time+(gl_FragCoord.y*rubberfactor));
+    //float psi = 0.15*(time+(gl_FragCoord.y*rubberfactor));
     mat4 zrot = mat4(
         vec4( cos (psi), sin (psi), 0.0, 0.0),
         vec4(-sin (psi), cos (psi), 0.0, 0.0),

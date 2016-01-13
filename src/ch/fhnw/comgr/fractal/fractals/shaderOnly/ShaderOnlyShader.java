@@ -37,6 +37,10 @@ public class ShaderOnlyShader extends AbstractShader {
         addUniform(new Vec3FloatUniform("mandelbulbO.color4", "color5"));
 
         addUniform(new IntUniform("mandelbulbO.iterations", "iterations"));
+
+        addUniform(new FloatUniform("mandelbulbO.phi", "phi"));
+        addUniform(new FloatUniform("mandelbulbO.theta", "theta"));
+        addUniform(new FloatUniform("mandelbulbO.psi", "psi"));
         /* For MandelbulbO Shader
         addUniform(new Vec3FloatUniform("mandelbulbO.cameraPosition", "cameraPosition"));
         addUniform(new FloatUniform("mandelbulbO.cameraRoll", "cameraRoll"));

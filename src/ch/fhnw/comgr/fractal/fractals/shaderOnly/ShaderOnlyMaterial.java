@@ -39,10 +39,12 @@ public class ShaderOnlyMaterial extends AbstractMaterial implements ICustomMater
 
     };
 
-    private int iterations = 4;
+    private int iterations = 6;
+
+    private float phi = 0, theta = 0, psi = 0;
 
     public ShaderOnlyMaterial() {
-        super(material(new MaterialAttribute<Float>("mandelbulbO.power"), new MaterialAttribute<IVec3>("mandelbulbO.cameraPosition"), new MaterialAttribute<IVec3>("mandelbulbO.outputSize"), new MaterialAttribute<IVec3>("mandelbulbO.color1"), new MaterialAttribute<IVec3>("mandelbulbO.color2"), new MaterialAttribute<IVec3>("mandelbulbO.color3"), new MaterialAttribute<IVec3>("mandelbulbO.color4"), new MaterialAttribute<IVec3>("mandelbulbO.color5"), new MaterialAttribute<Integer>("mandelbulbO.iterations")), geometry(IGeometry.POSITION_ARRAY, IGeometry.NORMAL_ARRAY, IGeometry.COLOR_MAP_ARRAY));
+        super(material(new MaterialAttribute<Float>("mandelbulbO.power"), new MaterialAttribute<IVec3>("mandelbulbO.cameraPosition"), new MaterialAttribute<IVec3>("mandelbulbO.outputSize"), new MaterialAttribute<IVec3>("mandelbulbO.color1"), new MaterialAttribute<IVec3>("mandelbulbO.color2"), new MaterialAttribute<IVec3>("mandelbulbO.color3"), new MaterialAttribute<IVec3>("mandelbulbO.color4"), new MaterialAttribute<IVec3>("mandelbulbO.color5"), new MaterialAttribute<Integer>("mandelbulbO.iterations"), new MaterialAttribute<Float>("mandelbulbO.phi"), new MaterialAttribute<Float>("mandelbulbO.theta"), new MaterialAttribute<Float>("mandelbulbO.psi")), geometry(IGeometry.POSITION_ARRAY, IGeometry.NORMAL_ARRAY, IGeometry.COLOR_MAP_ARRAY));
         this.shader = new ShaderOnlyShader(getClass(), Arrays.asList(getProvidedAttributes()));
     }
 
@@ -74,7 +76,7 @@ public class ShaderOnlyMaterial extends AbstractMaterial implements ICustomMater
 
     @Override
     public Object[] getData() {
-        return data(power, cameraPosition, outputSize, colors[0], colors[1], colors[2], colors[3], colors[4], iterations);
+        return data(power, cameraPosition, outputSize, colors[0], colors[1], colors[2], colors[3], colors[4], iterations, phi, theta, psi);
     }
 
     public void setColor(Vec3[] color) {
@@ -84,6 +86,13 @@ public class ShaderOnlyMaterial extends AbstractMaterial implements ICustomMater
 
     public void setIterations(int iterations) {
         this.iterations = iterations;
+        updateRequest();
+    }
+
+    public void updateAngle(float dphi, float dtheta, float dpsi) {
+        this.phi += dphi;
+        this.theta += dtheta;
+        this.psi += dpsi;
         updateRequest();
     }
 }
