@@ -29,6 +29,7 @@ public class ShaderOnlyShader extends AbstractShader {
 
         addUniform(new FloatUniform("mandelbulbO.power", "power"));
         addUniform(new Vec3FloatUniform("mandelbulbO.outputSize", "outputSize"));
+        addUniform(new Vec3FloatUniform("mandelbulbO.cameraPosition", "cameraPosition"));
 
         addUniform(new FloatUniform("mandelbulbO.time", "time"));
 
@@ -44,7 +45,7 @@ public class ShaderOnlyShader extends AbstractShader {
         addUniform(new FloatUniform("mandelbulbO.theta", "theta"));
         addUniform(new FloatUniform("mandelbulbO.psi", "psi"));
         /* For MandelbulbO Shader
-        addUniform(new Vec3FloatUniform("mandelbulbO.cameraPosition", "cameraPosition"));
+
         addUniform(new FloatUniform("mandelbulbO.cameraRoll", "cameraRoll"));
         addUniform(new Vec3FloatUniform("mandelbulbO.size", "size"));
         addUniform(new FloatUniform("mandelbulbO.scale", "scale"));
