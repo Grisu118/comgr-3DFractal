@@ -62,7 +62,9 @@ public class MandelBulb implements IFractal, IEventScheduler.IAnimationAction{
         distanceSlider.setActivated(false);
         widgets.add(distanceSlider);
         iterations = new SmallSlider(0,6,"Iterations", null, 1f/15f*7, (w, v) -> {});
+        iterations.setRange(3, 20);
         order  = new SmallSlider(0,5,"Order", null, 1f/15f*5, (w, v) -> {});
+        order.setRange(2, 20);
         widgets.add(iterations);
         widgets.add(order);
         SmallButton generate = new SmallButton(0,4,"Generate", "Generates the new Fractal", IKeyEvent.VK_G, (b, v) -> {

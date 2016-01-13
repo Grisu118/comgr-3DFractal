@@ -65,6 +65,9 @@ public class SmallSlider extends AbstractWidget {
     private float value;
     private boolean isActivated = true;
 
+    private int from, to;
+    private boolean hasRange = false;
+
     public SmallSlider(int x, int y, String label, String help) {
         this(x, y, label, help, 0, null);
     }
@@ -117,6 +120,21 @@ public class SmallSlider extends AbstractWidget {
             sliderBg = DEACITVATED_BG;
             textColor = DEACITVATED_TEXT_COLOR;
         }
+    }
+
+    public void setRange(int from, int to) {
+        this.from = from;
+        this.to = to;
+        hasRange = true;
+    }
+
+    @Override
+    public String getLabel() {
+        String s = super.getLabel();
+        if (hasRange) {
+            s += ": " + getValue(from, to);
+        }
+        return s;
     }
 
     @Override
