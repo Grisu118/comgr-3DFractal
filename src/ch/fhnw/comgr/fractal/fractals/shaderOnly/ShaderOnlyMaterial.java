@@ -41,7 +41,7 @@ public class ShaderOnlyMaterial extends AbstractMaterial implements ICustomMater
 
     private int iterations = 6;
 
-    private float phi = 0, theta = 0, psi = 0;
+    private float phi = (float) (Math.PI / 2), theta = 0, psi = 0;
 
     public ShaderOnlyMaterial() {
         super(material(new MaterialAttribute<Float>("mandelbulbO.power"), new MaterialAttribute<IVec3>("mandelbulbO.cameraPosition"), new MaterialAttribute<IVec3>("mandelbulbO.outputSize"), new MaterialAttribute<IVec3>("mandelbulbO.color1"), new MaterialAttribute<IVec3>("mandelbulbO.color2"), new MaterialAttribute<IVec3>("mandelbulbO.color3"), new MaterialAttribute<IVec3>("mandelbulbO.color4"), new MaterialAttribute<IVec3>("mandelbulbO.color5"), new MaterialAttribute<Integer>("mandelbulbO.iterations"), new MaterialAttribute<Float>("mandelbulbO.phi"), new MaterialAttribute<Float>("mandelbulbO.theta"), new MaterialAttribute<Float>("mandelbulbO.psi")), geometry(IGeometry.POSITION_ARRAY, IGeometry.NORMAL_ARRAY, IGeometry.COLOR_MAP_ARRAY));

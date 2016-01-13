@@ -179,23 +179,23 @@ public class ShaderOnly implements IFractal {
                     case IKeyEvent.VK_PAGE_DOWN:
                         mat.moveCamera(0, 0, -delta);
                         break;
-                    case IKeyEvent.VK_Q:
-                        mat.updateAngle(0.1f, 0, 0);
-                        break;
-                    case IKeyEvent.VK_E:
-                        mat.updateAngle(-0.1f, 0, 0);
-                        break;
                     case IKeyEvent.VK_W:
-                        mat.updateAngle(0, 0.1f, 0);
+                        mat.updateAngle(0.01f, 0, 0);
                         break;
                     case IKeyEvent.VK_S:
-                        mat.updateAngle(0, -0.1f, 0);
+                        mat.updateAngle(-0.01f, 0, 0);
                         break;
                     case IKeyEvent.VK_A:
-                        mat.updateAngle(0, 0, 0.1f);
+                        mat.updateAngle(0, 0.01f, 0);
                         break;
                     case IKeyEvent.VK_D:
-                        mat.updateAngle(0, 0, -0.1f);
+                        mat.updateAngle(0, -0.01f, 0);
+                        break;
+                    case IKeyEvent.VK_Q:
+                        mat.updateAngle(0, 0, 0.01f);
+                        break;
+                    case IKeyEvent.VK_E:
+                        mat.updateAngle(0, 0, -0.01f);
                         break;
                 }
             }
