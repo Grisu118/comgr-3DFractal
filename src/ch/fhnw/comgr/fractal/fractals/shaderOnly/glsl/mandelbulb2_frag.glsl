@@ -1,18 +1,18 @@
 #version 330
 
-uniform vec3 outputSize = vec3(500, 500, 0);
-uniform float time = 12;
+uniform vec3 outputSize;
+uniform float time;
 uniform float power;
 
-uniform vec3 cameraPosition = vec3(0,0,8.5);
+uniform vec3 cameraPosition;
 
-uniform vec3 color1 = vec3(0.4, 0.82, 0.91);
-uniform vec3 color2 = vec3(0,0.31,1);
-uniform vec3 color3 = vec3(0.15,0.12,0.49);
-uniform vec3 color4 = vec3(0.44,0.12,0.76);
-uniform vec3 color5 = vec3(0.05,0.06,0.18);
+uniform vec3 color1;
+uniform vec3 color2;
+uniform vec3 color3;
+uniform vec3 color4;
+uniform vec3 color5;
 
-uniform int iterations = 6;
+uniform int iterations;
 
 uniform float phi;
 uniform float theta;

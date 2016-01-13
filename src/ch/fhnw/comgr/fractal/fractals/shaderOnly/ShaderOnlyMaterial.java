@@ -1,6 +1,7 @@
 package ch.fhnw.comgr.fractal.fractals.shaderOnly;
 
 import ch.fhnw.ether.render.shader.IShader;
+import ch.fhnw.ether.render.variable.base.FloatArray;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
 import ch.fhnw.ether.scene.mesh.material.AbstractMaterial;
 import ch.fhnw.ether.scene.mesh.material.ICustomMaterial;
@@ -17,6 +18,7 @@ public class ShaderOnlyMaterial extends AbstractMaterial implements ICustomMater
     private final IShader shader;
 
     private float power = 8;
+    private float time = 12f;
     /* for mandelbulb0 Shader
     private float scale = 2;
     private float surfaceDetail = 0.6f;
@@ -44,7 +46,7 @@ public class ShaderOnlyMaterial extends AbstractMaterial implements ICustomMater
     private float phi = (float) (Math.PI / 2), theta = 0, psi = 0;
 
     public ShaderOnlyMaterial() {
-        super(material(new MaterialAttribute<Float>("mandelbulbO.power"), new MaterialAttribute<IVec3>("mandelbulbO.cameraPosition"), new MaterialAttribute<IVec3>("mandelbulbO.outputSize"), new MaterialAttribute<IVec3>("mandelbulbO.color1"), new MaterialAttribute<IVec3>("mandelbulbO.color2"), new MaterialAttribute<IVec3>("mandelbulbO.color3"), new MaterialAttribute<IVec3>("mandelbulbO.color4"), new MaterialAttribute<IVec3>("mandelbulbO.color5"), new MaterialAttribute<Integer>("mandelbulbO.iterations"), new MaterialAttribute<Float>("mandelbulbO.phi"), new MaterialAttribute<Float>("mandelbulbO.theta"), new MaterialAttribute<Float>("mandelbulbO.psi")), geometry(IGeometry.POSITION_ARRAY, IGeometry.NORMAL_ARRAY, IGeometry.COLOR_MAP_ARRAY));
+        super(material(new MaterialAttribute<Float>("mandelbulbO.power"), new MaterialAttribute<IVec3>("mandelbulbO.cameraPosition"), new MaterialAttribute<IVec3>("mandelbulbO.outputSize"), new MaterialAttribute<IVec3>("mandelbulbO.color1"), new MaterialAttribute<IVec3>("mandelbulbO.color2"), new MaterialAttribute<IVec3>("mandelbulbO.color3"), new MaterialAttribute<IVec3>("mandelbulbO.color4"), new MaterialAttribute<IVec3>("mandelbulbO.color5"), new MaterialAttribute<Integer>("mandelbulbO.iterations"), new MaterialAttribute<Float>("mandelbulbO.phi"), new MaterialAttribute<Float>("mandelbulbO.theta"), new MaterialAttribute<Float>("mandelbulbO.psi"), new MaterialAttribute<Float>("mandelbulbO.time")), geometry(IGeometry.POSITION_ARRAY, IGeometry.NORMAL_ARRAY, IGeometry.COLOR_MAP_ARRAY));
         this.shader = new ShaderOnlyShader(getClass(), Arrays.asList(getProvidedAttributes()));
     }
 
@@ -76,7 +78,7 @@ public class ShaderOnlyMaterial extends AbstractMaterial implements ICustomMater
 
     @Override
     public Object[] getData() {
-        return data(power, cameraPosition, outputSize, colors[0], colors[1], colors[2], colors[3], colors[4], iterations, phi, theta, psi);
+        return data(power, cameraPosition, outputSize, colors[0], colors[1], colors[2], colors[3], colors[4], iterations, phi, theta, psi, time);
     }
 
     public void setColor(Vec3[] color) {

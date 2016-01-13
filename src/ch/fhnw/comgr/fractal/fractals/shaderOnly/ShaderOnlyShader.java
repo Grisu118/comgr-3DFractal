@@ -30,6 +30,8 @@ public class ShaderOnlyShader extends AbstractShader {
         addUniform(new FloatUniform("mandelbulbO.power", "power"));
         addUniform(new Vec3FloatUniform("mandelbulbO.outputSize", "outputSize"));
 
+        addUniform(new FloatUniform("mandelbulbO.time", "time"));
+
         addUniform(new Vec3FloatUniform("mandelbulbO.color1", "color1"));
         addUniform(new Vec3FloatUniform("mandelbulbO.color2", "color2"));
         addUniform(new Vec3FloatUniform("mandelbulbO.color3", "color3"));
