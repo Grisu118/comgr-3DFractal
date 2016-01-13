@@ -32,7 +32,36 @@ public class ShaderOnly implements IFractal {
     IMesh mesh;
     IScene scene;
     private List<IWidget> widgets;
-    private SmallSlider distanceSlider;
+
+    private Vec3[][] colors = {
+            new Vec3[]{
+                    new Vec3(0.4, 0.82, 0.91),
+                    new Vec3(0, 0.31, 1),
+                    new Vec3(0.15, 0.12, 0.49),
+                    new Vec3(0.44, 0.12, 0.76),
+                    new Vec3(0.05, 0.06, 0.18)
+            },
+            new Vec3[]{new Vec3(0.9, 0, 0),
+                    new Vec3(1, 0.67, 0.25),
+                    new Vec3(0.68, 0.99, 0.24),
+                    new Vec3(0.99, 1, 0.19),
+                    new Vec3(1, 0.42, 0.0235)
+            },
+            new Vec3[]{
+                    new Vec3(0.94, 1, 0),
+                    new Vec3(0.53, 1, 0),
+                    new Vec3(0.18, 1, 0),
+                    new Vec3(0, 1, 0.37),
+                    new Vec3(0, 1, 0.82)
+            },
+            new Vec3[]{
+                    new Vec3(0.35, 0.02, 0.25),
+                    new Vec3(0.67, 0, 0.41),
+                    new Vec3(0.67, 0, 0.07),
+                    new Vec3(1, 0.42, 0.01),
+                    new Vec3(1, 0.76, 0.02)
+            }
+    };
 
     public static final float[] CUBE_TRIANGLES = {
             -0.5f, 0, -0.5f, +0.5f, 0, -0.5f, -0.5f, 0, +0.5f,
@@ -57,9 +86,12 @@ public class ShaderOnly implements IFractal {
 
         widgets = new ArrayList<>();
 
-        order  = new SmallSlider(0,5,"Order", null, 1f/25f*7, (w, v) -> mat.setPower(w.getValue(1, 25)));
+        order = new SmallSlider(0, 5, "Order", null, 1f / 25f * 7, (w, v) -> mat.setPower(w.getValue(1, 25)));
         order.setRange(1, 25);
         widgets.add(order);
+        SmallSlider color = new SmallSlider(0, 4, "Color", null, 0, (w, v) -> mat.setColor(colors[w.getValue(0, 3)]));
+        color.setRange(0, 3);
+        widgets.add(color);
     }
 
     @Override
@@ -141,12 +173,6 @@ public class ShaderOnly implements IFractal {
                         break;
                     case IKeyEvent.VK_PAGE_DOWN:
                         mat.moveCamera(0, 0, -delta);
-                        break;
-                    case IKeyEvent.VK_E:
-                        mat.setCameraRoll((float) (mat.getCameraRoll() + delta * 10));
-                        break;
-                    case IKeyEvent.VK_Q:
-                        mat.setCameraRoll((float) (mat.getCameraRoll() - delta * 10));
                         break;
                 }
             }

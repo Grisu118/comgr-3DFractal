@@ -2,6 +2,7 @@ package ch.fhnw.comgr.fractal.fractals.shaderOnly;
 
 import ch.fhnw.ether.render.shader.base.AbstractShader;
 import ch.fhnw.ether.render.variable.base.FloatUniform;
+import ch.fhnw.ether.render.variable.base.Mat3FloatUniform;
 import ch.fhnw.ether.render.variable.base.Vec3FloatUniform;
 import ch.fhnw.ether.render.variable.builtin.ColorMapArray;
 import ch.fhnw.ether.render.variable.builtin.NormalArray;
@@ -24,12 +25,23 @@ public class ShaderOnlyShader extends AbstractShader {
         addArray(new PositionArray());
         //addArray(new NormalArray());
         //addArray(new ColorMapArray());
-        addUniform(new FloatUniform("mandelbulbO.scale", "scale"));
+
         addUniform(new FloatUniform("mandelbulbO.power", "power"));
+        addUniform(new Vec3FloatUniform("mandelbulbO.outputSize", "outputSize"));
+
+        addUniform(new Vec3FloatUniform("mandelbulbO.color1", "color1"));
+        addUniform(new Vec3FloatUniform("mandelbulbO.color2", "color2"));
+        addUniform(new Vec3FloatUniform("mandelbulbO.color3", "color3"));
+        addUniform(new Vec3FloatUniform("mandelbulbO.color4", "color4"));
+        addUniform(new Vec3FloatUniform("mandelbulbO.color4", "color5"));
+
+        /* For MandelbulbO Shader
         addUniform(new Vec3FloatUniform("mandelbulbO.cameraPosition", "cameraPosition"));
         addUniform(new FloatUniform("mandelbulbO.cameraRoll", "cameraRoll"));
         addUniform(new Vec3FloatUniform("mandelbulbO.size", "size"));
-        addUniform(new Vec3FloatUniform("mandelbulbO.outputSize", "outputSize"));
+        addUniform(new FloatUniform("mandelbulbO.scale", "scale"));
+        */
+
         addUniform(new ViewUniformBlock());
     }
 }

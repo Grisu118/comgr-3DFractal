@@ -15,38 +15,38 @@ import java.util.Arrays;
 public class ShaderOnlyMaterial extends AbstractMaterial implements ICustomMaterial {
 
     private final IShader shader;
-    private float scale = 2;
+
     private float power = 8;
+    /* for mandelbulb0 Shader
+    private float scale = 2;
     private float surfaceDetail = 0.6f;
     private float surfaceSmoothness = 0.8f;
     private float boundingRadius = 5;
     private Vec3 offset = Vec3.ZERO;
     private Vec3  shift = Vec3.ZERO;;
     private Vec3 size = new Vec3(1, 1, 0);
-    private Vec3 outputSize = new Vec3(500,500,0);
+     */
+    private Vec3 outputSize = new Vec3(500, 500, 0);
 
-    private Vec3 cameraPosition = new Vec3(0,0,7.5);
-    private float cameraRoll = 0;
+    private Vec3 cameraPosition = new Vec3(0, 0, 7.5);
+
+    private Vec3[] colors = {
+            new Vec3(0.4, 0.82, 0.91),
+            new Vec3(0, 0.31, 1),
+            new Vec3(0.15,0.12,0.49),
+            new Vec3(0.44,0.12,0.76),
+            new Vec3(0.05,0.06,0.18)
+
+    };
 
     public ShaderOnlyMaterial() {
-        super(material(new MaterialAttribute<Float>("mandelbulbO.scale"), new MaterialAttribute<Float>("mandelbulbO.power"), new MaterialAttribute<IVec3>("mandelbulbO.cameraPosition"), new MaterialAttribute<Float>("mandelbulbO.cameraRoll"), new MaterialAttribute<IVec3>("mandelbulbO.size"), new MaterialAttribute<IVec3>("mandelbulbO.outputSize")), geometry(IGeometry.POSITION_ARRAY, IGeometry.NORMAL_ARRAY, IGeometry.COLOR_MAP_ARRAY));
+        super(material(new MaterialAttribute<Float>("mandelbulbO.power"), new MaterialAttribute<IVec3>("mandelbulbO.cameraPosition"), new MaterialAttribute<IVec3>("mandelbulbO.outputSize"), new MaterialAttribute<IVec3>("mandelbulbO.color1"), new MaterialAttribute<IVec3>("mandelbulbO.color2"), new MaterialAttribute<IVec3>("mandelbulbO.color3"), new MaterialAttribute<IVec3>("mandelbulbO.color4"), new MaterialAttribute<IVec3>("mandelbulbO.color5")), geometry(IGeometry.POSITION_ARRAY, IGeometry.NORMAL_ARRAY, IGeometry.COLOR_MAP_ARRAY));
         this.shader = new ShaderOnlyShader(getClass(), Arrays.asList(getProvidedAttributes()));
-    }
-
-    public void setScale(float scale) {
-        this.scale = scale;
-        updateRequest();
     }
 
     public void moveCamera(double dx, double dy, double dz) {
         cameraPosition = new Vec3(cameraPosition.x + dx, cameraPosition.y + dy, cameraPosition.z + dz);
         System.out.println(cameraPosition);
-        updateRequest();
-    }
-
-    public void setCameraRoll(float cameraRoll) {
-        this.cameraRoll = cameraRoll;
-        System.out.println(cameraRoll);
         updateRequest();
     }
 
@@ -58,15 +58,6 @@ public class ShaderOnlyMaterial extends AbstractMaterial implements ICustomMater
     public void setOutputSize(Vec3 outputSize) {
         this.outputSize = outputSize;
         updateRequest();
-    }
-
-    public void setSize(Vec3 size) {
-        this.size = size;
-        updateRequest();
-    }
-
-    public float getCameraRoll() {
-        return cameraRoll;
     }
 
     @Override
@@ -81,6 +72,11 @@ public class ShaderOnlyMaterial extends AbstractMaterial implements ICustomMater
 
     @Override
     public Object[] getData() {
-        return data(scale, power, cameraPosition, cameraRoll, size, outputSize);
+        return data(power, cameraPosition, outputSize, colors[0], colors[1], colors[2], colors[3], colors[4]);
+    }
+
+    public void setColor(Vec3[] color) {
+        this.colors = color;
+        updateRequest();
     }
 }
