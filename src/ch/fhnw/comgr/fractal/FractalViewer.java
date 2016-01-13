@@ -14,7 +14,8 @@ import ch.fhnw.ether.scene.camera.Camera;
 import ch.fhnw.ether.scene.camera.ICamera;
 import ch.fhnw.ether.ui.Button;
 import ch.fhnw.ether.view.IView;
-import ch.fhnw.ether.view.gl.DefaultView;
+import ch.fhnw.ether.view.gl.FractalView;
+import ch.fhnw.util.Viewport;
 import ch.fhnw.util.math.Vec3;
 
 import java.awt.event.KeyEvent;
@@ -37,9 +38,10 @@ public final class FractalViewer implements IUpdateListener {
 
     public FractalViewer(FractalType type) {
         controller = new DefaultController();
+
         controller.run((time) -> {
             // Create view
-            IView view = new DefaultView(controller, 100, 100, 500, 500, new IView.Config(IView.ViewType.INTERACTIVE_VIEW, 0, IView.ViewFlag.SMOOTH_LINES), "3D Fractal Viewer");
+            FractalView view = new FractalView(controller, 100, 100, 500, 500, new IView.Config(IView.ViewType.INTERACTIVE_VIEW, 0, IView.ViewFlag.SMOOTH_LINES), "3D Fractal Viewer");
             // Create scene
             scene = new DefaultScene(controller);
             controller.setScene(scene);
@@ -52,6 +54,7 @@ public final class FractalViewer implements IUpdateListener {
                     break;
                 case SHADER:
                     activeFractal = new ShaderOnly(scene);
+                    view.setViewer(this);
                     break;
                 default:
                     activeFractal = new MandelBulb(scene, view.getViewport());
@@ -96,4 +99,10 @@ public final class FractalViewer implements IUpdateListener {
         }
     }
 
+    public void reshape(Viewport viewport) {
+        if (activeFractal instanceof ShaderOnly) {
+            ShaderOnly f = (ShaderOnly) activeFractal;
+            f.reshape(viewport);
+        }
+    }
 }

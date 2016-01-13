@@ -16,6 +16,7 @@ import ch.fhnw.ether.scene.mesh.geometry.DefaultGeometry;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
 import ch.fhnw.ether.ui.IWidget;
 import ch.fhnw.ether.view.IView;
+import ch.fhnw.util.Viewport;
 import ch.fhnw.util.math.Vec3;
 import ch.fhnw.util.math.geometry.GeometryUtilities;
 
@@ -34,29 +35,13 @@ public class ShaderOnly implements IFractal {
     private SmallSlider distanceSlider;
 
     public static final float[] CUBE_TRIANGLES = {
-            // bottom
-            -500, -500, -500, -500, +500, -500, +500, +500, -500,
-            -500, -500, -500, +500, +500, -500, +500, -500, -500,
+            -0.5f, 0, -0.5f, +0.5f, 0, -0.5f, -0.5f, 0, +0.5f,
+            +0.5f, 0, -0.5f, -0.5f, 0, +0.5f, +0.5f, 0, +0.5f,
+    };
 
-            // top
-            +500, -500, +500, +500, +500, +500, -500, +500, +500,
-            +500, -500, +500, -500, +500, +500, -500, -500, +500,
-
-            // front
-            -500, -500, -500, +500, -500, -500, +500, -500, +500,
-            -500, -500, -500, +500, -500, +500, -500, -500, +500,
-
-            // back
-            +500, +500, -500, -500, +500, -500, -500, +500, +500,
-            +500, +500, -500, -500, +500, +500, +500, +500, +500,
-
-            // left
-            -500, +500, -500, -500, -500, -500, -500, -500, +500,
-            -500, +500, -500, -500, -500, +500, -500, +500, +500,
-
-            // right
-            +500, -500, -500, +500, +500, -500, +500, +500, +500,
-            +500, -500, -500, +500, +500, +500, +500, -500, +500
+    public static final float[] CUBE_TEXTURES = {
+            0, 0, 1, 0, 0, 1,
+            1, 0, 0, 1, 1, 1
     };
 
     public ShaderOnly(IScene _scene) {
@@ -66,7 +51,7 @@ public class ShaderOnly implements IFractal {
     @Override
     public void init() {
         mat = new ShaderOnlyMaterial();
-        mesh = new DefaultMesh(mat, DefaultGeometry.createVN(IGeometry.Primitive.TRIANGLES, CUBE_TRIANGLES, GeometryUtilities.calculateNormals(CUBE_TRIANGLES)));
+        mesh = new DefaultMesh(mat, DefaultGeometry.createVNM(IGeometry.Primitive.TRIANGLES, CUBE_TRIANGLES, GeometryUtilities.calculateNormals(CUBE_TRIANGLES), CUBE_TEXTURES));
         scene.add3DObject(mesh);
 
         widgets = new ArrayList<>();
@@ -152,11 +137,11 @@ public class ShaderOnly implements IFractal {
                     case IKeyEvent.VK_PAGE_DOWN:
                         mat.moveCamera(0, 0, -delta);
                         break;
-                    case IKeyEvent.VK_E :
-                        mat.setCameraRoll((float) (mat.getCameraRoll() + delta*10));
+                    case IKeyEvent.VK_E:
+                        mat.setCameraRoll((float) (mat.getCameraRoll() + delta * 10));
                         break;
-                    case IKeyEvent.VK_Q :
-                        mat.setCameraRoll((float) (mat.getCameraRoll() - delta*10));
+                    case IKeyEvent.VK_Q:
+                        mat.setCameraRoll((float) (mat.getCameraRoll() - delta * 10));
                         break;
                 }
             }
@@ -190,6 +175,12 @@ public class ShaderOnly implements IFractal {
 
     @Override
     public ICamera getCamera() {
-        return new Camera(new Vec3(0, -1500, 0), Vec3.ZERO);
+        return new Camera(new Vec3(0, -0.5f, 0), Vec3.ZERO);
+    }
+
+    public void reshape(Viewport viewport) {
+        //mat.setSize(new Vec3(viewport.w, viewport.h, 0));
+        mat.setOutputSize(new Vec3(viewport.w, viewport.h, 0));
+        System.out.println("W: " + viewport.w + ", H: " + viewport.h);
     }
 }

@@ -22,12 +22,14 @@ public class ShaderOnlyMaterial extends AbstractMaterial implements ICustomMater
     private float boundingRadius = 5;
     private Vec3 offset = Vec3.ZERO;
     private Vec3  shift = Vec3.ZERO;;
+    private Vec3 size = new Vec3(1, 1, 0);
+    private Vec3 outputSize = new Vec3(500,500,0);
 
     private Vec3 cameraPosition = new Vec3(0,0,-2.5);
     private float cameraRoll = 0;
 
     public ShaderOnlyMaterial() {
-        super(material(new MaterialAttribute<Float>("mandelbulbO.scale"), new MaterialAttribute<Float>("mandelbulbO.power"), new MaterialAttribute<IVec3>("mandelbulbO.cameraPosition"), new MaterialAttribute<Float>("mandelbulbO.cameraRoll")), geometry(IGeometry.POSITION_ARRAY));
+        super(material(new MaterialAttribute<Float>("mandelbulbO.scale"), new MaterialAttribute<Float>("mandelbulbO.power"), new MaterialAttribute<IVec3>("mandelbulbO.cameraPosition"), new MaterialAttribute<Float>("mandelbulbO.cameraRoll"), new MaterialAttribute<IVec3>("mandelbulbO.size"), new MaterialAttribute<IVec3>("mandelbulbO.outputSize")), geometry(IGeometry.POSITION_ARRAY, IGeometry.NORMAL_ARRAY, IGeometry.COLOR_MAP_ARRAY));
         this.shader = new ShaderOnlyShader(getClass(), Arrays.asList(getProvidedAttributes()));
     }
 
@@ -48,6 +50,16 @@ public class ShaderOnlyMaterial extends AbstractMaterial implements ICustomMater
         updateRequest();
     }
 
+    public void setOutputSize(Vec3 outputSize) {
+        this.outputSize = outputSize;
+        updateRequest();
+    }
+
+    public void setSize(Vec3 size) {
+        this.size = size;
+        updateRequest();
+    }
+
     public float getCameraRoll() {
         return cameraRoll;
     }
@@ -64,6 +76,6 @@ public class ShaderOnlyMaterial extends AbstractMaterial implements ICustomMater
 
     @Override
     public Object[] getData() {
-        return data(scale, power, cameraPosition, cameraRoll);
+        return data(scale, power, cameraPosition, cameraRoll, size, outputSize);
     }
 }

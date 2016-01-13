@@ -87,13 +87,13 @@ uniform float fogFalloff = 0;           // {"label":"Fog falloff",  "min":0,    
 uniform float specularity = 0.8;          // {"label":"Specularity",  "min":0,    "max":3,    "step":0.01,    "default":0.8,  "group":"Shading", "group_label":"Shininess"}
 uniform float specularExponent = 4;     // {"label":"Specular exponent", "min":0, "max":50, "step":0.1,     "default":4,    "group":"Shading"}
 
-uniform vec2  size = vec2(200, 200);                 // {"default":[400, 300]}
-uniform vec2  outputSize = vec2(600, 600);           // {"default":[800, 600]}
+uniform vec3  size = vec3(400, 300, 0);                 // {"default":[400, 300]}
+uniform vec3  outputSize = vec3(500, 500, 0);           // {"default":[800, 600]}
 uniform float aoIntensity = 0.15;          // {"label":"AO intensity",     "min":0, "max":1, "step":0.01, "default":0.15,  "group":"Shading", "group_label":"Ambient occlusion"}
 uniform float aoSpread = 9;             // {"label":"AO spread",    "min":0, "max":20, "step":0.01, "default":9,  "group":"Shading"}
 
 uniform mat3  objectRotation = mat3(0.0);       // {"label":["Rotate x", "Rotate y", "Rotate z"], "group":"Fractal", "control":"rotation", "default":[0,0,0], "min":-360, "max":360, "step":1, "group_label":"Object rotation"}
-                                                                                                                                               uniform mat3  fractalRotation1  = mat3(0.0);     // {"label":["Rotate x", "Rotate y", "Rotate z"], "group":"Fractal", "control":"rotation", "default":[0,0,0], "min":-360, "max":360, "step":1, "group_label":"Fractal rotation 1"}
+uniform mat3  fractalRotation1  = mat3(0.0);     // {"label":["Rotate x", "Rotate y", "Rotate z"], "group":"Fractal", "control":"rotation", "default":[0,0,0], "min":-360, "max":360, "step":1, "group_label":"Fractal rotation 1"}
 uniform mat3  fractalRotation2 = mat3(0.0);     // {"label":["Rotate x", "Rotate y", "Rotate z"], "group":"Fractal", "control":"rotation", "default":[0,0,0], "min":-360, "max":360, "step":1, "group_label":"Fractal rotation 2"}
 uniform bool  depthMap = false;             // {"label":"Depth map", "default": false, "value":1, "group":"Shading"}
 
@@ -202,7 +202,7 @@ vec3 Mandelbulb(vec3 w)
 // Define the ray direction from the pixel coordinates
 vec3 rayDirection(vec2 pixel)
 {
-    vec2 p = (0.5 * size - pixel) / vec2(size.x, -size.y);
+    vec2 p = (0.5 * size.xy - pixel) / vec2(size.x, -size.y);
     p.x *= aspectRatio;
     vec3 d = (p.x * u + p.y * v - cameraFocalLength * w);
 
