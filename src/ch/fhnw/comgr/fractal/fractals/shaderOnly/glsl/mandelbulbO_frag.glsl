@@ -97,8 +97,6 @@ uniform mat3  fractalRotation1  = mat3(0.0);     // {"label":["Rotate x", "Rotat
 uniform mat3  fractalRotation2 = mat3(0.0);     // {"label":["Rotate x", "Rotate y", "Rotate z"], "group":"Fractal", "control":"rotation", "default":[0,0,0], "min":-360, "max":360, "step":1, "group_label":"Fractal rotation 2"}
 uniform bool  depthMap = false;             // {"label":"Depth map", "default": false, "value":1, "group":"Shading"}
 
-out vec4 fragColor;
-
 float aspectRatio = outputSize.x / outputSize.y;
 float fovfactor = 1.0 / sqrt(1.0 + cameraFocalLength * cameraFocalLength);
 float pixelScale = 1.0 / min(outputSize.x, outputSize.y);
@@ -413,5 +411,5 @@ void main()
 
     if (color.a < 0.00392) discard; // Less than 1/255
 
-    fragColor = vec4(pow(color.rgb, vec3(1.0 / gamma)), color.a);
+    gl_FragColor = vec4(pow(color.rgb, vec3(1.0 / gamma)), color.a);
 }

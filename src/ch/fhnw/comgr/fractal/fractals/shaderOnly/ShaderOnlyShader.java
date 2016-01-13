@@ -18,7 +18,7 @@ import java.util.Collection;
  */
 public class ShaderOnlyShader extends AbstractShader {
     public ShaderOnlyShader(Class<?> root, Collection<IAttribute> attributes) {
-        super(root, "mandelbulbO", "mandelbulbO",
+        super(root, "mandelbulbO", "mandelbulb2",
                 IGeometry.Primitive.TRIANGLES);
 
         addArray(new PositionArray());

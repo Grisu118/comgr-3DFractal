@@ -25,7 +25,7 @@ public class ShaderOnlyMaterial extends AbstractMaterial implements ICustomMater
     private Vec3 size = new Vec3(1, 1, 0);
     private Vec3 outputSize = new Vec3(500,500,0);
 
-    private Vec3 cameraPosition = new Vec3(0,0,-2.5);
+    private Vec3 cameraPosition = new Vec3(0,0,7.5);
     private float cameraRoll = 0;
 
     public ShaderOnlyMaterial() {
