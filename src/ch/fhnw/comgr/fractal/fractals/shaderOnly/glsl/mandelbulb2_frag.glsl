@@ -11,11 +11,13 @@ uniform vec3 color3 = vec3(0.15,0.12,0.49);
 uniform vec3 color4 = vec3(0.44,0.12,0.76);
 uniform vec3 color5 = vec3(0.05,0.06,0.18);
 
+uniform int iterations;
+
 float surfacefunction(vec3 hitpoint) {
     vec3 z = hitpoint;
     vec3 c = vec3(sin(power/15.0)*0.66,sin(power/15.0)*0.1,sin(power/15.0));
     float r = 0.0;
-    for (float count=0.0; count<5.0-1.0; count+=1.0) {
+    for (int count=0; count<iterations; count+=1) {
         vec3 z2 = z*z;
         r = sqrt(dot(z,z));
         if (r>2.0) {
@@ -27,6 +29,8 @@ float surfacefunction(vec3 hitpoint) {
         float cosPhi = z.x/planeXY;
         float sinThe = planeXY/r;
         float cosThe = z.z/r;
+
+
         //level 1
         sinPhi = 2.0*sinPhi*cosPhi;
         cosPhi = 2.0*cosPhi*cosPhi-1.0;
@@ -70,7 +74,7 @@ void main(void) {
     const vec3 materialdiffuse = vec3(1.0, 1.0, 1.0);
     const float materialspecularexponent = 256.0;
 
-    //interpolate eye position from billboard fragment coordinates    
+    //interpolate eye position from billboard fragment coordinates
     vec2 position = -1.0+2.0*gl_FragCoord.xy/outputSize.xy;
     position.x *= outputSize.x/outputSize.y;
 
@@ -78,7 +82,7 @@ void main(void) {
     vec3 target = vec3(position,0.0) + vec3(0.0, 0.0,1.5);
 
     //do the matrix calculations by hand X-)
-    //as mat4 constructor and arithmetic assignments are 
+    //as mat4 constructor and arithmetic assignments are
     //currently broken (2010-09-21) on ATI cards i found
     //a workaround using vec4 constructors wich works on
     //both NVIDIA+ATI --- MAGIC. DO NOT TOUCH! -=#:-)
@@ -97,7 +101,7 @@ void main(void) {
         vec4(sin(theta), 0.0,  cos(theta), 0.0),
         vec4(       0.0, 0.0,         0.0, 1.0)
     );
-    float psi = 0.15*(power+(gl_FragCoord.y*rubberfactor));   
+    float psi = 0.15*(power+(gl_FragCoord.y*rubberfactor));
     mat4 zrot = mat4(
         vec4( cos (psi), sin (psi), 0.0, 0.0),
         vec4(-sin (psi), cos (psi), 0.0, 0.0),

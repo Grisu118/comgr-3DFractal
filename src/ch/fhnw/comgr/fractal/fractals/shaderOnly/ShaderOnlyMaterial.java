@@ -39,8 +39,10 @@ public class ShaderOnlyMaterial extends AbstractMaterial implements ICustomMater
 
     };
 
+    private int iterations = 4;
+
     public ShaderOnlyMaterial() {
-        super(material(new MaterialAttribute<Float>("mandelbulbO.power"), new MaterialAttribute<IVec3>("mandelbulbO.cameraPosition"), new MaterialAttribute<IVec3>("mandelbulbO.outputSize"), new MaterialAttribute<IVec3>("mandelbulbO.color1"), new MaterialAttribute<IVec3>("mandelbulbO.color2"), new MaterialAttribute<IVec3>("mandelbulbO.color3"), new MaterialAttribute<IVec3>("mandelbulbO.color4"), new MaterialAttribute<IVec3>("mandelbulbO.color5")), geometry(IGeometry.POSITION_ARRAY, IGeometry.NORMAL_ARRAY, IGeometry.COLOR_MAP_ARRAY));
+        super(material(new MaterialAttribute<Float>("mandelbulbO.power"), new MaterialAttribute<IVec3>("mandelbulbO.cameraPosition"), new MaterialAttribute<IVec3>("mandelbulbO.outputSize"), new MaterialAttribute<IVec3>("mandelbulbO.color1"), new MaterialAttribute<IVec3>("mandelbulbO.color2"), new MaterialAttribute<IVec3>("mandelbulbO.color3"), new MaterialAttribute<IVec3>("mandelbulbO.color4"), new MaterialAttribute<IVec3>("mandelbulbO.color5"), new MaterialAttribute<Integer>("mandelbulbO.iterations")), geometry(IGeometry.POSITION_ARRAY, IGeometry.NORMAL_ARRAY, IGeometry.COLOR_MAP_ARRAY));
         this.shader = new ShaderOnlyShader(getClass(), Arrays.asList(getProvidedAttributes()));
     }
 
@@ -72,11 +74,16 @@ public class ShaderOnlyMaterial extends AbstractMaterial implements ICustomMater
 
     @Override
     public Object[] getData() {
-        return data(power, cameraPosition, outputSize, colors[0], colors[1], colors[2], colors[3], colors[4]);
+        return data(power, cameraPosition, outputSize, colors[0], colors[1], colors[2], colors[3], colors[4], iterations);
     }
 
     public void setColor(Vec3[] color) {
         this.colors = color;
+        updateRequest();
+    }
+
+    public void setIterations(int iterations) {
+        this.iterations = iterations;
         updateRequest();
     }
 }

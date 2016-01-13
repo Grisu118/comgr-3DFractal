@@ -75,7 +75,7 @@ public class FractalController implements IController {
 
     private IView currentView;
     private ITool currentTool;
-    private boolean navigationToolActive;
+    private boolean navigationToolActive = true;
 
     public FractalController() {
         this(60);

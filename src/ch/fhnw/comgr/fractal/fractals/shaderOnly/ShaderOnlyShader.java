@@ -2,6 +2,7 @@ package ch.fhnw.comgr.fractal.fractals.shaderOnly;
 
 import ch.fhnw.ether.render.shader.base.AbstractShader;
 import ch.fhnw.ether.render.variable.base.FloatUniform;
+import ch.fhnw.ether.render.variable.base.IntUniform;
 import ch.fhnw.ether.render.variable.base.Mat3FloatUniform;
 import ch.fhnw.ether.render.variable.base.Vec3FloatUniform;
 import ch.fhnw.ether.render.variable.builtin.ColorMapArray;
@@ -35,6 +36,7 @@ public class ShaderOnlyShader extends AbstractShader {
         addUniform(new Vec3FloatUniform("mandelbulbO.color4", "color4"));
         addUniform(new Vec3FloatUniform("mandelbulbO.color4", "color5"));
 
+        addUniform(new IntUniform("mandelbulbO.iterations", "iterations"));
         /* For MandelbulbO Shader
         addUniform(new Vec3FloatUniform("mandelbulbO.cameraPosition", "cameraPosition"));
         addUniform(new FloatUniform("mandelbulbO.cameraRoll", "cameraRoll"));

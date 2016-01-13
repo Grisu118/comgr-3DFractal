@@ -2,6 +2,7 @@ package ch.fhnw.comgr.fractal.fractals.shaderOnly;
 
 import ch.fhnw.comgr.fractal.IUpdateListener;
 import ch.fhnw.comgr.fractal.fractals.IFractal;
+import ch.fhnw.comgr.fractal.ui.BooleanWidget;
 import ch.fhnw.comgr.fractal.ui.SmallSlider;
 import ch.fhnw.ether.controller.event.IKeyEvent;
 import ch.fhnw.ether.controller.event.IPointerEvent;
@@ -91,7 +92,10 @@ public class ShaderOnly implements IFractal {
         widgets.add(order);
         SmallSlider color = new SmallSlider(0, 4, "Color", null, 0, (w, v) -> mat.setColor(colors[w.getValue(0, 3)]));
         color.setRange(0, 3);
+        BooleanWidget iter = new BooleanWidget(0,3, "Smooth", "On", "Off", "Smooth", false, (w, v) -> mat.setIterations(w.getValue() ? 3 : 4));
+
         widgets.add(color);
+        widgets.add(iter);
     }
 
     @Override
