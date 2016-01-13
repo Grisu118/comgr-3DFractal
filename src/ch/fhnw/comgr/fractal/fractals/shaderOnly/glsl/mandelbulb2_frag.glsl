@@ -12,12 +12,12 @@ uniform vec3 color3 = vec3(0.15,0.12,0.49);
 uniform vec3 color4 = vec3(0.44,0.12,0.76);
 uniform vec3 color5 = vec3(0.05,0.06,0.18);
 
-uniform int iterations;
+uniform int iterations = 6;
 
 float surfacefunction(vec3 hitpoint) {
     vec3 z = vec3(0);
     float r = 0.0;
-    for (int count=0; count<6; count+=1) {
+    for (int count=0; count<iterations; count+=1) {
         vec3 z2 = z*z;
         r = sqrt(dot(z,z));
         if (r>2.0) {
