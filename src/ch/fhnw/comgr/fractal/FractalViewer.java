@@ -7,7 +7,6 @@ import ch.fhnw.comgr.fractal.fractals.shaderOnly.ShaderOnly;
 import ch.fhnw.comgr.fractal.fractals.simpleTree.SimpleTree2;
 import ch.fhnw.comgr.fractal.util.UpdateType;
 import ch.fhnw.ether.controller.FractalController;
-import ch.fhnw.ether.controller.IController;
 import ch.fhnw.ether.scene.DefaultScene;
 import ch.fhnw.ether.scene.IScene;
 import ch.fhnw.ether.scene.camera.Camera;

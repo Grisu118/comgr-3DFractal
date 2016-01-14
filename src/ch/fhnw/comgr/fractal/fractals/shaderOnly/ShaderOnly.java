@@ -2,7 +2,6 @@ package ch.fhnw.comgr.fractal.fractals.shaderOnly;
 
 import ch.fhnw.comgr.fractal.IUpdateListener;
 import ch.fhnw.comgr.fractal.fractals.IFractal;
-import ch.fhnw.comgr.fractal.ui.BooleanWidget;
 import ch.fhnw.comgr.fractal.ui.SmallSlider;
 import ch.fhnw.ether.controller.event.IKeyEvent;
 import ch.fhnw.ether.controller.event.IPointerEvent;
@@ -25,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO this needs a nice description.
+ * Implementation of Fractal in Shader, uses mandelbulb2 shader.
  */
 public class ShaderOnly implements IFractal {
 

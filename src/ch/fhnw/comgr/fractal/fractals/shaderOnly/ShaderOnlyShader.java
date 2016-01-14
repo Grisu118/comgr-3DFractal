@@ -3,15 +3,11 @@ package ch.fhnw.comgr.fractal.fractals.shaderOnly;
 import ch.fhnw.ether.render.shader.base.AbstractShader;
 import ch.fhnw.ether.render.variable.base.FloatUniform;
 import ch.fhnw.ether.render.variable.base.IntUniform;
-import ch.fhnw.ether.render.variable.base.Mat3FloatUniform;
 import ch.fhnw.ether.render.variable.base.Vec3FloatUniform;
-import ch.fhnw.ether.render.variable.builtin.ColorMapArray;
-import ch.fhnw.ether.render.variable.builtin.NormalArray;
 import ch.fhnw.ether.render.variable.builtin.PositionArray;
 import ch.fhnw.ether.render.variable.builtin.ViewUniformBlock;
 import ch.fhnw.ether.scene.attribute.IAttribute;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
-import ch.fhnw.util.math.IVec3;
 
 import java.util.Collection;
 

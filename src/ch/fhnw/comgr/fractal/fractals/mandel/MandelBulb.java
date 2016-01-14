@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO this needs a nice description.
+ * Implementation of Mandelbulb in Java.
  */
 public class MandelBulb implements IFractal, IEventScheduler.IAnimationAction{
 

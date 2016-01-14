@@ -30,29 +30,19 @@
 package ch.fhnw.ether.view.gl;
 
 import ch.fhnw.comgr.fractal.FractalViewer;
-import ch.fhnw.comgr.fractal.IUpdateListener;
-import ch.fhnw.comgr.fractal.fractals.IFractal;
-import ch.fhnw.comgr.fractal.util.UpdateType;
-import com.jogamp.nativewindow.util.Point;
-import com.jogamp.newt.event.KeyEvent;
-import com.jogamp.newt.event.KeyListener;
-import com.jogamp.newt.event.MouseEvent;
-import com.jogamp.newt.event.MouseListener;
-import com.jogamp.newt.event.WindowAdapter;
-import com.jogamp.newt.event.WindowEvent;
-import com.jogamp.newt.event.WindowListener;
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLEventListener;
-
 import ch.fhnw.ether.controller.IController;
 import ch.fhnw.ether.controller.event.IEvent;
+import ch.fhnw.ether.controller.event.IEventScheduler.IAction;
 import ch.fhnw.ether.controller.event.IKeyEvent;
 import ch.fhnw.ether.controller.event.IPointerEvent;
-import ch.fhnw.ether.controller.event.IEventScheduler.IAction;
 import ch.fhnw.ether.view.IView;
 import ch.fhnw.ether.view.IWindow;
 import ch.fhnw.util.Viewport;
+import com.jogamp.nativewindow.util.Point;
+import com.jogamp.newt.event.*;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLEventListener;
 
 /**
  * Default view class that implements some basic functionality. Use as base for
